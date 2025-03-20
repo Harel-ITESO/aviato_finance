@@ -2,7 +2,7 @@
 import 'package:aviato_finance/GraphPie.dart';
 import 'package:aviato_finance/dummy_data.dart';
 import 'package:flutter/material.dart';
-
+import 'package:aviato_finance/screens/add_Data.dart';
 class HomePage extends StatefulWidget {
   const HomePage({super.key, });
 
@@ -20,10 +20,24 @@ class _HomePageState extends State<HomePage> {
 
   
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  setState(() {
+    _selectedIndex = index;
+  });
+
+  switch (index) {
+  case 0:
+    Navigator.pushNamed(context, '/home');
+    break;
+  case 1:
+    Navigator.pushNamed(context, '/addData');
+    break;
+  case 2:
+    Navigator.pushNamed(context, '/stats');
+    break;
+  default:
+    // Handle any other cases if necessary
   }
+}
   Widget createItemList (context, index) {
     final item = InOutUserData[index];
     return Padding(

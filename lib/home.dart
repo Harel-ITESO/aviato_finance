@@ -104,18 +104,23 @@ class _HomePageState extends State<HomePage> {
               ),
           ],
         ),
-        leading: Padding(
-          padding: const EdgeInsets.fromLTRB(30,0,0,0),
-          child: IconButton(
-            icon: Icon(
-              Icons.menu_rounded,
-              size: 40, // Aquí defines el tamaño del ícono del menú
+        leadingWidth: 100,
+        leading: Builder(
+          builder: (context) => Padding(
+              padding: const EdgeInsets.fromLTRB(30, 0, 0, 0), // Ajusta la posición
+            child: InkWell(
+              borderRadius: BorderRadius.circular(50), // Para efecto de toque circular
+              onTap: () {
+                Scaffold.of(context).openDrawer();
+              },
+              child: Icon(
+                Icons.menu_rounded,
+                size: 40,
+              ),
             ),
-            onPressed: () {
-              Scaffold.of(context).openDrawer();
-            },
           ),
         ),
+
 
       ),
       body: Center(

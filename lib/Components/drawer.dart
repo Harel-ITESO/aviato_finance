@@ -44,6 +44,7 @@ class AviatoDrawer extends StatelessWidget {
             text: 'Stats',
             onTap: () => _handleTap(context, 2),
           ),
+          _buildDrawerItem(icon: Icons.settings, text: "Setting", onTap: () => _handleTap(context, 3)),
         ],
       ),
     );

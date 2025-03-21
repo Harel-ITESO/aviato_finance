@@ -1,4 +1,7 @@
 
+import 'dart:math';
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -10,13 +13,34 @@ import 'package:syncfusion_flutter_charts/charts.dart';
         final Color? color;
     }
 
+  Set<Color> usedColors = {}; // Para evitar repetidos
+  Color getUniqueColor() {
+  Color newColor;
+  do {
+    newColor = Color.fromRGBO(
+      Random().nextInt(181), 
+      Random().nextInt(181), 
+      Random().nextInt(181), 
+      1.0
+    );
+  } while (usedColors.contains(newColor)); // Evita colores repetidos
+  usedColors.add(newColor);
+  return newColor;
+}
+
 class GraphPie extends StatelessWidget {
   const GraphPie({
     super.key,
     required this.chartData,
+    required this.legend,
+    this.shadowWidth=0,
+    this.shadowHeight=0,
   });
 
   final List<ChartData> chartData;
+  final Legend legend;
+  final double shadowWidth;
+  final double shadowHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +48,14 @@ class GraphPie extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         Container( // shadow
-          width: 210,
-          height: 220,
+          width: shadowWidth,
+          height: shadowHeight,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.2),
-                spreadRadius: 1,
+                spreadRadius: 0.5,
                 blurRadius: 10,
                 offset: Offset(10, -10), 
               ),
@@ -40,10 +64,7 @@ class GraphPie extends StatelessWidget {
         ),
     
         SfCircularChart(
-          legend: Legend(
-            isVisible: true, 
-            position: LegendPosition.bottom,
-            ),
+          legend: legend,
           series: <CircularSeries>[
               // Render pie chart
               PieSeries<ChartData, String>(
@@ -71,3 +92,4 @@ class GraphPie extends StatelessWidget {
     );
   }
 }
+

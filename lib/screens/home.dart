@@ -1,8 +1,15 @@
 
-import 'package:aviato_finance/GraphPie.dart';
+import 'package:aviato_finance/Components/appBar.dart';
+import 'package:aviato_finance/Components/bottomNavBar.dart';
+import 'package:aviato_finance/Components/drawer.dart';
+import 'package:aviato_finance/Components/globalVariables.dart';
+import 'package:aviato_finance/Components/GraphPie.dart';
 import 'package:aviato_finance/dummy_data.dart';
 import 'package:flutter/material.dart';
 import 'package:aviato_finance/screens/add_Data.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key, });
 
@@ -13,8 +20,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  final Color customRed = Color.fromRGBO(160, 74, 67, 1);
-  final Color customGreen = Color.fromRGBO(109, 120, 58, 1);
   
   int _selectedIndex = 0;
 
@@ -91,38 +96,7 @@ class _HomePageState extends State<HomePage> {
             ChartData('Outcome', totalOutcome, outcomePercentage ,customRed),
         ];
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Icon(Icons.monetization_on_outlined, size: 40,),
-            Text(" Aviato", 
-              style: TextStyle(
-                fontSize: 35, 
-                color: customGreen
-                ),
-              ),
-          ],
-        ),
-        leadingWidth: 100,
-        leading: Builder(
-          builder: (context) => Padding(
-              padding: const EdgeInsets.fromLTRB(30, 0, 0, 0), // Ajusta la posición
-            child: InkWell(
-              borderRadius: BorderRadius.circular(50), // Para efecto de toque circular
-              onTap: () {
-                Scaffold.of(context).openDrawer();
-              },
-              child: Icon(
-                Icons.menu_rounded,
-                size: 40,
-              ),
-            ),
-          ),
-        ),
-
-
-      ),
+      appBar: AviatoAppBar(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -156,7 +130,15 @@ class _HomePageState extends State<HomePage> {
                           SizedBox(width: 70,), 
                         ],
                       ),
-                      GraphPie(chartData: chartData)
+                      GraphPie(
+                        chartData: chartData, 
+                        legend: Legend(
+                          isVisible: true, 
+                          position: LegendPosition.bottom,
+                        ),
+                        shadowWidth: 210,
+                        shadowHeight: 220,
+                      )
                     ],
                   ),
                 )
@@ -217,83 +199,17 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      drawer: Drawer(
-        backgroundColor: Color.fromRGBO(169, 190, 109, 1),
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            ListTile(
-                title: Container(
-                  margin: EdgeInsets.fromLTRB(0, 50, 0, 0),
-                  alignment: Alignment.centerLeft,
-                  child: Icon(
-                    Icons.arrow_back_ios_new_rounded,
-                    size: 40,
-                    color: Colors.white,
-                  )
-                ),
-                onTap: () {
-                  Navigator.pop(context); // Cierra el drawer
-                },
-              ),
-            
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20,0,0,0),
-              child: ListTile(
-                leading: Icon(Icons.home, color: Colors.white,),
-                title: Text('Home', style: TextStyle(color: Colors.white)),
-                onTap: () {
-                  _onItemTapped(0);
-                  Navigator.pop(context); // Cierra el drawer
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20,0,0,0),
-              child: ListTile(
-                leading: Icon(Icons.add, color: Colors.white),
-                title: Text('Add', style: TextStyle(color: Colors.white)),
-                onTap: () {
-                  _onItemTapped(1);
-                  Navigator.pop(context); // Cierra el drawer
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20,0,0,0),
-              child: ListTile(
-                leading: Icon(Icons.show_chart, color: Colors.white),
-                title: Text('Stats', style: TextStyle(color: Colors.white)),
-                onTap: () {
-                  _onItemTapped(2);
-                  Navigator.pop(context); // Cierra el drawer
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: customGreen,
+      drawer: AviatoDrawer(
+    onItemTapped: _onItemTapped, // La función para cambiar de página
+  ),
+      bottomNavigationBar: AviatoBottomNavBar(
         currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_filled),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle_outline),
-            label: 'Add',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart_rounded),
-            label: 'Stats',
-          ),
-        ],
+        onItemTapped: _onItemTapped,
       ),
     );
   }
 }
+
+
 
 

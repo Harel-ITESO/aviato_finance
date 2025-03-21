@@ -1,4 +1,5 @@
-import 'package:aviato_finance/home.dart';
+import 'package:aviato_finance/screens/home.dart';
+import 'package:aviato_finance/screens/stats.dart';
 import 'package:flutter/material.dart';
 import 'package:aviato_finance/screens/add_Data.dart';
 
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/addData': (context) => const AddData(),
         '/home': (context) => const HomePage(),
+        '/stats': (context) => const Stats()
       },
     );
   }

@@ -1,3 +1,4 @@
+import 'package:aviato_finance/Components/globalVariables.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:flutter/services.dart';
@@ -12,8 +13,8 @@ class AddData extends StatefulWidget {
 class _AddDataState extends State<AddData> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
-  final Color customRed = Color.fromRGBO(160, 74, 67, 1);
-  final Color customGreen = Color.fromARGB(255, 161, 195, 105); 
+  //final Color customRed = Color.fromRGBO(160, 74, 67, 1);
+  //final Color customGreen = Color.fromARGB(255, 161, 195, 105); 
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
   final TextEditingController _paymentMethodController = TextEditingController();

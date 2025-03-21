@@ -1,5 +1,5 @@
 
-import 'package:aviato_finance/Components/GraphPie.dart';
+import 'package:aviato_finance/Components/graph_pie.dart';
 import 'package:aviato_finance/Components/InOutToggleButtons.dart';
 import 'package:aviato_finance/Components/appBar.dart';
 import 'package:aviato_finance/Components/bottomNavBar.dart';

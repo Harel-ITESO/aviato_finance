@@ -1,61 +1,54 @@
-
 import 'package:aviato_finance/Components/appBar.dart';
 import 'package:aviato_finance/Components/bottomNavBar.dart';
 import 'package:aviato_finance/Components/drawer.dart';
 import 'package:aviato_finance/Components/globalVariables.dart';
-import 'package:aviato_finance/Components/GraphPie.dart';
+import 'package:aviato_finance/Components/graph_pie.dart';
 import 'package:aviato_finance/dummy_data.dart';
 import 'package:flutter/material.dart';
-import 'package:aviato_finance/screens/add_Data.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:aviato_finance/modules/data_add/data_add_view.dart';
 
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, });
-
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-
-  
   int _selectedIndex = 0;
 
-  
   void _onItemTapped(int index) {
-  setState(() {
-    _selectedIndex = index;
-  });
+    setState(() {
+      _selectedIndex = index;
+    });
 
-  switch (index) {
-  case 0:
-    Navigator.pushNamed(context, '/home');
-    break;
-  case 1:
-    Navigator.pushNamed(context, '/addData');
-    break;
-  case 2:
-    Navigator.pushNamed(context, '/stats');
-    break;
-  default:
-    // Handle any other cases if necessary
+    switch (index) {
+      case 0:
+        Navigator.pushNamed(context, '/home');
+        break;
+      case 1:
+        Navigator.pushNamed(context, '/addData');
+        break;
+      case 2:
+        Navigator.pushNamed(context, '/stats');
+        break;
+      default:
+      // Handle any other cases if necessary
+    }
   }
-}
-  Widget createItemList (context, index) {
+
+  Widget createItemList(context, index) {
     final item = InOutUserData[index];
     return Padding(
       padding: const EdgeInsets.fromLTRB(15, 4, 15, 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(item["name"], 
-            style: TextStyle(
-              fontSize: 16
-            ),
-          ),
-          Text("\$${item["amount"]}",
+          Text(item["name"], style: TextStyle(fontSize: 16)),
+          Text(
+            "\$${item["amount"]}",
             style: TextStyle(
               fontSize: 16,
               color: item["amount"] < 0 ? customRed : customGreen,
@@ -72,29 +65,33 @@ class _HomePageState extends State<HomePage> {
     DateTime now = DateTime.now();
     DateTime sevenDaysAgo = now.subtract(Duration(days: 7));
 
-    List recentData = InOutUserData.where((item) {
-      DateTime itemDate = DateTime.parse(item["date"]);
-      return itemDate.isAfter(sevenDaysAgo) && itemDate.isBefore(now);
-    }).toList();
+    List recentData =
+        InOutUserData.where((item) {
+          DateTime itemDate = DateTime.parse(item["date"]);
+          return itemDate.isAfter(sevenDaysAgo) && itemDate.isBefore(now);
+        }).toList();
 
     double totalIncome = recentData
         .where((item) => item["amount"] >= 0)
         .fold(0.0, (sum, item) => sum + item["amount"]);
 
-    double totalOutcome = recentData
-        .where((item) => item["amount"] < 0)
-        .fold(0.0, (sum, item) => sum + item["amount"])
-        .abs();
+    double totalOutcome =
+        recentData
+            .where((item) => item["amount"] < 0)
+            .fold(0.0, (sum, item) => sum + item["amount"])
+            .abs();
 
     double totalAmount = totalIncome + totalOutcome;
 
-    double incomePercentage = totalAmount > 0 ? (totalIncome / totalAmount) * 100 : 100;
-    double outcomePercentage = totalAmount > 0 ? (totalOutcome / totalAmount) * 100 : 0;
-  
+    double incomePercentage =
+        totalAmount > 0 ? (totalIncome / totalAmount) * 100 : 100;
+    double outcomePercentage =
+        totalAmount > 0 ? (totalOutcome / totalAmount) * 100 : 0;
+
     final List<ChartData> chartData = [
-            ChartData('Income', totalIncome, incomePercentage ,customGreen),
-            ChartData('Outcome', totalOutcome, outcomePercentage ,customRed),
-        ];
+      ChartData('Income', totalIncome, incomePercentage, customGreen),
+      ChartData('Outcome', totalOutcome, outcomePercentage, customRed),
+    ];
     return Scaffold(
       appBar: AviatoAppBar(),
       body: Center(
@@ -113,21 +110,23 @@ class _HomePageState extends State<HomePage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Resume", 
+                          Text(
+                            "Resume",
                             style: TextStyle(
                               fontSize: 20,
                               color: Color.fromRGBO(108, 96, 100, 1),
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text("Last 7 days", 
+                          Text(
+                            "Last 7 days",
                             style: TextStyle(
                               fontSize: 20,
                               color: Color.fromRGBO(108, 96, 100, 1),
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(width: 70,), 
+                          SizedBox(width: 70),
                         ],
                       ),
                       GraphPie(
@@ -141,8 +140,8 @@ class _HomePageState extends State<HomePage> {
                       )
                     ],
                   ),
-                )
                 ),
+              ),
             ),
             Card(
               color: Color.fromRGBO(236, 236, 236, 1),
@@ -154,28 +153,39 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("History", 
+                      Text(
+                        "History",
                         style: TextStyle(
                           fontSize: 20,
                           color: Color.fromRGBO(108, 96, 100, 1),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 8), 
+                      SizedBox(height: 8),
                       Expanded(
                         child: Container(
                           decoration: BoxDecoration(
-                            color: const Color.fromARGB(158, 255, 255, 255), // Fondo blanco para darle un aspecto plano
+                            color: const Color.fromARGB(
+                              158,
+                              255,
+                              255,
+                              255,
+                            ), // Fondo blanco para darle un aspecto plano
                             borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: const Color.fromARGB(70, 114, 114, 114), width: 1), // Borde suave para el efecto de incrustado
+                            border: Border.all(
+                              color: const Color.fromARGB(70, 114, 114, 114),
+                              width: 1,
+                            ), // Borde suave para el efecto de incrustado
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.transparent, // Elimina la sombra para que no esté elevada
+                                color:
+                                    Colors
+                                        .transparent, // Elimina la sombra para que no esté elevada
                               ),
                             ],
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.fromLTRB(0,3,1.8,0),
+                            padding: const EdgeInsets.fromLTRB(0, 3, 1.8, 0),
                             child: Scrollbar(
                               thumbVisibility: true,
                               child: ListView.builder(
@@ -183,9 +193,13 @@ class _HomePageState extends State<HomePage> {
                                 physics: AlwaysScrollableScrollPhysics(),
                                 itemCount: InOutUserData.length,
                                 itemBuilder: (context, index) {
-                                  InOutUserData.sort((a, b) => DateTime.parse(b['date']).compareTo(DateTime.parse(a['date'])));
+                                  InOutUserData.sort(
+                                    (a, b) => DateTime.parse(
+                                      b['date'],
+                                    ).compareTo(DateTime.parse(a['date'])),
+                                  );
                                   return createItemList(context, index);
-                                }
+                                },
                               ),
                             ),
                           ),
@@ -193,8 +207,8 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                )
                 ),
+              ),
             ),
           ],
         ),
@@ -209,7 +223,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-
-
-

@@ -18,9 +18,9 @@ import 'package:syncfusion_flutter_charts/charts.dart';
   Color newColor;
   do {
     newColor = Color.fromRGBO(
-      Random().nextInt(181), 
-      Random().nextInt(181), 
-      Random().nextInt(181), 
+      Random().nextInt(181),
+      Random().nextInt(181),
+      Random().nextInt(181),
       1.0
     );
   } while (usedColors.contains(newColor)); // Evita colores repetidos
@@ -57,12 +57,11 @@ class GraphPie extends StatelessWidget {
                 color: Colors.black.withValues(alpha: 0.2),
                 spreadRadius: 0.5,
                 blurRadius: 10,
-                offset: Offset(10, -10), 
+                offset: Offset(10, -10),
               ),
             ],
           ),
         ),
-    
         SfCircularChart(
           legend: legend,
           series: <CircularSeries>[

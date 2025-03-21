@@ -13,18 +13,40 @@ class AddData extends StatefulWidget {
 class _AddDataState extends State<AddData> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
-  //final Color customRed = Color.fromRGBO(160, 74, 67, 1);
-  //final Color customGreen = Color.fromARGB(255, 161, 195, 105); 
+  final Color customRed = Color.fromRGBO(160, 74, 67, 1);
+  final Color customGreen = Color.fromARGB(255, 161, 195, 105); 
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
-  final TextEditingController _paymentMethodController = TextEditingController();
-  final List<String> _outcomeCategories = ['Food', 'Transport', 'Shopping', 'Entertainment'];
-  final List<String> _incomeCategories = ['Salary', 'Freelance', 'Gift', 'Extra Income'];
-  final List<String> _paymentMethods = ['Cash', 'Credit Card', 'Debit Card', 'Bank Transfer'];
-  final List<String> _repeatOptions = ['Daily', 'Every 3 days', 'Weekly', 'Monthly', 'Every 6 months'];
+  final TextEditingController _paymentMethodController =
+      TextEditingController();
+  final List<String> _outcomeCategories = [
+    'Food',
+    'Transport',
+    'Shopping',
+    'Entertainment',
+  ];
+  final List<String> _incomeCategories = [
+    'Salary',
+    'Freelance',
+    'Gift',
+    'Extra Income',
+  ];
+  final List<String> _paymentMethods = [
+    'Cash',
+    'Credit Card',
+    'Debit Card',
+    'Bank Transfer',
+  ];
+  final List<String> _repeatOptions = [
+    'Daily',
+    'Every 3 days',
+    'Weekly',
+    'Monthly',
+    'Every 6 months',
+  ];
   final TextEditingController _repeatController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  
+
   List<String> _categories = []; // Added to store categories dynamically
 
   bool _isIncome = true; // true = Income, false = Outcome
@@ -43,12 +65,12 @@ class _AddDataState extends State<AddData> {
     });
   }
 
-  // void addData hace referencia a la función que se ejecuta al presionar el botón de "Save", 
-  //se encarga de validar que los campos no estén vacíos y muestra un mensaje emergente 
+  // void addData hace referencia a la función que se ejecuta al presionar el botón de "Save",
+  //se encarga de validar que los campos no estén vacíos y muestra un mensaje emergente
   //en caso de que no se haya llenado algún campo.
   //pero no se ha implementado la función de agregar datos a la base de datos. xd :v
-// ignore: slash_for_doc_comments
-/** 
+  // ignore: slash_for_doc_comments
+  /** 
   void _addData() {
     if (_nameController.text.isNotEmpty && _amountController.text.isNotEmpty) {
       // ignore: unintended_html_in_doc_comment, unintended_html_in_doc_comment
@@ -85,7 +107,7 @@ class _AddDataState extends State<AddData> {
         Navigator.pushNamed(context, '/stats');
         break;
       default:
-        // Handle any other cases if necessary
+      // Handle any other cases if necessary
     }
   }
 
@@ -100,7 +122,9 @@ class _AddDataState extends State<AddData> {
         padding: const EdgeInsets.all(15),
         child: Card(
           elevation: 4,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(15),
             child: Column(
@@ -112,7 +136,7 @@ class _AddDataState extends State<AddData> {
                   },
                   borderRadius: BorderRadius.circular(8),
                   selectedColor: Colors.white,
-                  fillColor: _isIncome ? customGreen: customGreen,
+                  fillColor: _isIncome ? customGreen : customGreen,
                   children: const [
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16),
@@ -139,12 +163,14 @@ class _AddDataState extends State<AddData> {
                   onTap: _selectedDate,
                 ),
                 const SizedBox(height: 10),
-                  _buildTextField(
+                _buildTextField(
                   controller: _amountController,
                   label: "Amount",
                   icon: Icons.attach_money,
                   keyboardType: TextInputType.number, // Solo datos numéricos
-                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$'))],
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                  ],
                 ),
                 const SizedBox(height: 10),
                 _buildDropdown(
@@ -184,39 +210,51 @@ class _AddDataState extends State<AddData> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.grey,
                         shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                                minimumSize: Size(100, 60), // Ancho de 200 y alto de 60
-
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        minimumSize: Size(100, 60), // Ancho de 200 y alto de 60
                       ),
                       onPressed: () {
-                        if (_nameController.text.isNotEmpty && _amountController.text.isNotEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        if (_nameController.text.isNotEmpty &&
+                            _amountController.text.isNotEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text('Continue adding data')),
-                        );
-                        _nameController.clear();
-                        _amountController.clear();
-                        _dateController.clear();
-                        _categoryController.clear();
-                        _paymentMethodController.clear();
-                        _repeatController.clear();
-                        _descriptionController.clear();
+                          );
+                          _nameController.clear();
+                          _amountController.clear();
+                          _dateController.clear();
+                          _categoryController.clear();
+                          _paymentMethodController.clear();
+                          _repeatController.clear();
+                          _descriptionController.clear();
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Please fill in all required fields')),
+                            SnackBar(
+                              content: Text(
+                                'Please fill in all required fields',
+                              ),
+                            ),
                           );
                         }
                       },
-                      child: const Text("Next", style: TextStyle(color: Colors.white)),
+                      child: const Text(
+                        "Next",
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                     Container(
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.2), // Color y opacidad de la sombra
+                            color: Colors.black.withOpacity(
+                              0.2,
+                            ), // Color y opacidad de la sombra
                             spreadRadius: 2, // Difuminado hacia afuera
                             blurRadius: 8, // Suavizado de la sombra
-                            offset: const Offset(4, 4), // Desplazamiento de la sombra
+                            offset: const Offset(
+                              4,
+                              4,
+                            ), // Desplazamiento de la sombra
                           ),
                         ],
                         borderRadius: BorderRadius.circular(8),
@@ -227,7 +265,10 @@ class _AddDataState extends State<AddData> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           backgroundColor: customGreen,
-                          minimumSize: const Size(200, 60), // Ancho de 200 y alto de 60
+                          minimumSize: const Size(
+                            200,
+                            60,
+                          ), // Ancho de 200 y alto de 60
                         ),
                         onPressed: () {
                           _nameController.clear();
@@ -244,7 +285,7 @@ class _AddDataState extends State<AddData> {
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ],
@@ -260,8 +301,12 @@ class _AddDataState extends State<AddData> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Container(
-              alignment: Alignment.center, // Centrar el ícono dentro del rectángulo
-              child: const Icon(Icons.home_filled, color: Color.fromARGB(255, 85, 91, 89)), // Ícono blanco
+              alignment:
+                  Alignment.center, // Centrar el ícono dentro del rectángulo
+              child: const Icon(
+                Icons.home_filled,
+                color: Color.fromARGB(255, 85, 91, 89),
+              ), // Ícono blanco
             ),
             label: 'Home',
           ),
@@ -270,26 +315,39 @@ class _AddDataState extends State<AddData> {
               width: 60, // Ancho del rectángulo
               height: 40, // Altura del rectángulo
               decoration: BoxDecoration(
-                color: _selectedIndex == 1 ? customGreen : Colors.transparent, // Fondo relleno si está seleccionado
+                color:
+                    _selectedIndex == 1
+                        ? customGreen
+                        : Colors
+                            .transparent, // Fondo relleno si está seleccionado
                 borderRadius: BorderRadius.circular(12), // Bordes redondeados
               ),
-              alignment: Alignment.center, // Centrar el ícono dentro del rectángulo
-              child: const Icon(Icons.add_circle_outline, color: Colors.white), // Ícono blanco
+              alignment:
+                  Alignment.center, // Centrar el ícono dentro del rectángulo
+              child: const Icon(
+                Icons.add_circle_outline,
+                color: Colors.white,
+              ), // Ícono blanco
             ),
             label: 'Add',
           ),
           BottomNavigationBarItem(
             icon: Container(
-              alignment: Alignment.center, // Centrar el ícono dentro del rectángulo
-              child: const Icon(Icons.bar_chart_rounded, color: Color.fromARGB(255, 91, 76, 76)),
+              alignment:
+                  Alignment.center, // Centrar el ícono dentro del rectángulo
+              child: const Icon(
+                Icons.bar_chart_rounded,
+                color: Color.fromARGB(255, 91, 76, 76),
+              ),
             ),
             label: 'Stats',
           ),
         ],
       ),
-          );
-        }
-  // Función para construir un campo de texto con un icono a la izquierda y un borde redondeado de 8  
+    );
+  }
+
+  // Función para construir un campo de texto con un icono a la izquierda y un borde redondeado de 8
   Widget _buildTextField({
     required TextEditingController controller,
     required String label,
@@ -312,6 +370,7 @@ class _AddDataState extends State<AddData> {
       ),
     );
   }
+
   // función para construir un menú desplegable con un icono a la izquierda y un borde redondeado de 8
   Widget _buildDropdown({
     required TextEditingController controller,
@@ -329,10 +388,7 @@ class _AddDataState extends State<AddData> {
       ),
       items: [
         ...items.map((item) {
-          return DropdownMenuItem<String>(
-            value: item,
-            child: Text(item),
-          );
+          return DropdownMenuItem<String>(value: item, child: Text(item));
         }),
         if (onAddNew != null)
           DropdownMenuItem<String>(
@@ -357,7 +413,8 @@ class _AddDataState extends State<AddData> {
       },
     );
   }
- // Función para seleccionar la fecha y la hora
+
+  // Función para seleccionar la fecha y la hora
   Future<void> _selectedDate() async {
     DateTime? _pickedDate = await showDatePicker(
       context: context,
@@ -373,7 +430,8 @@ class _AddDataState extends State<AddData> {
       _selectedTime(_pickedDate);
     }
   }
-// Función para seleccionar la hora
+
+  // Función para seleccionar la hora
   Future<void> _selectedTime(DateTime _pickedDate) async {
     TimeOfDay? _pickedTime = await showTimePicker(
       context: context,
@@ -383,11 +441,13 @@ class _AddDataState extends State<AddData> {
     if (_pickedTime != null) {
       setState(() {
         String formattedTime = _pickedTime.format(context);
-        _dateController.text = "${_pickedDate.toString().split(' ')[0]} $formattedTime";
+        _dateController.text =
+            "${_pickedDate.toString().split(' ')[0]} $formattedTime";
       });
     }
   }
- // Función para mostrar un diálogo para agregar una nueva categoría
+
+  // Función para mostrar un diálogo para agregar una nueva categoría
   void _showAddCategoryDialog() {
     TextEditingController _newCategoryController = TextEditingController();
 
@@ -413,7 +473,9 @@ class _AddDataState extends State<AddData> {
                 onPressed: () {
                   if (_newCategoryController.text.isNotEmpty) {
                     setState(() {
-                      _categories.add(_newCategoryController.text); // Use _categories directly
+                      _categories.add(
+                        _newCategoryController.text,
+                      ); // Use _categories directly
                       _categoryController.text = _newCategoryController.text;
                     });
                     Navigator.pop(context);
@@ -427,7 +489,8 @@ class _AddDataState extends State<AddData> {
       },
     );
   }
- // Función para mostrar un diálogo para agregar una nueva repetición personalizada
+
+  // Función para mostrar un diálogo para agregar una nueva repetición personalizada
   void _showCustomRepeatDialog() {
     TextEditingController customRepeatController = TextEditingController();
 
@@ -441,7 +504,9 @@ class _AddDataState extends State<AddData> {
             content: TextField(
               controller: customRepeatController,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(hintText: "Enter number of days"),
+              decoration: const InputDecoration(
+                hintText: "Enter number of days",
+              ),
             ),
             actions: [
               TextButton(
@@ -453,7 +518,8 @@ class _AddDataState extends State<AddData> {
               TextButton(
                 onPressed: () {
                   if (customRepeatController.text.isNotEmpty) {
-                    String customValue = "Every ${customRepeatController.text} days";
+                    String customValue =
+                        "Every ${customRepeatController.text} days";
                     setState(() {
                       if (!_repeatOptions.contains(customValue)) {
                         _repeatOptions.add(customValue);
@@ -472,4 +538,3 @@ class _AddDataState extends State<AddData> {
     );
   }
 }
-

@@ -1,6 +1,8 @@
 import 'package:aviato_finance/components/application_button.dart';
+import 'package:aviato_finance/modules/authentication/login/widgets/login_google.dart';
 import 'package:aviato_finance/modules/authentication/login/widgets/other_options.dart';
 import 'package:aviato_finance/modules/authentication/widgets/form_input.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginForm extends StatefulWidget {
@@ -68,10 +70,10 @@ class _LoginFormState extends State<LoginForm> {
 
           // other login options
           SizedBox(height: 20),
-
-          ApplicationButton(
+          
+          /* ApplicationButton(
             type: ButtonType.contrast,
-            onPressed: () {},
+            onPressed: (){},
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -82,10 +84,11 @@ class _LoginFormState extends State<LoginForm> {
                 Text("Sign in with Google"),
               ],
             ),
-          ),
+          ),  */
+          SignInScreenGoogle(),
 
           SizedBox(height: 10),
-          ApplicationButton(
+          /* ApplicationButton(
             type: ButtonType.contrast,
             onPressed: () {},
             child: Row(
@@ -98,9 +101,11 @@ class _LoginFormState extends State<LoginForm> {
                 Text("Sign in with Apple"),
               ],
             ),
-          ),
+          ), */
         ],
       ),
     );
   }
 }
+
+

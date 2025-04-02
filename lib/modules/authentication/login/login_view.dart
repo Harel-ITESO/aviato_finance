@@ -1,4 +1,5 @@
 import 'package:aviato_finance/modules/authentication/login/widgets/login_form.dart';
+import 'package:aviato_finance/modules/authentication/login/widgets/login_google.dart';
 import 'package:aviato_finance/utils/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +29,7 @@ class _LoginViewState extends State<LoginView> {
       backgroundColor: appColor,
       body: Padding(
         padding: const EdgeInsets.all(5),
-        child: Center(child: LoginForm()),
+        child: Center(child:LoginForm()),
       ),
     );
   }

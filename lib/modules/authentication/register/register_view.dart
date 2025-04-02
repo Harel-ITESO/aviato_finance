@@ -1,4 +1,4 @@
-import 'package:aviato_finance/modules/authentication/register/register_view.dart';
+
 import 'package:aviato_finance/modules/authentication/register/widgets/register_form.dart';
 import 'package:aviato_finance/utils/colors.dart';
 import 'package:flutter/material.dart';

@@ -26,7 +26,7 @@ class FormInput extends StatelessWidget {
       decoration: InputDecoration(
         prefixIcon: leadingIcon,
         filled: true,
-        hint: hint,
+        hintText: hint?.data,
         fillColor: Colors.white,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),

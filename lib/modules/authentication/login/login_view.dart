@@ -28,7 +28,8 @@ class _LoginViewState extends State<LoginView> {
       backgroundColor: appColor,
       body: Padding(
         padding: const EdgeInsets.all(5),
-        child: Center(child: LoginForm()),
+        child: Center(child: LoginForm() 
+        ),
       ),
     );
   }

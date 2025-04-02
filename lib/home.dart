@@ -1,7 +1,6 @@
 import 'package:aviato_finance/components/graph_pie.dart';
 import 'package:aviato_finance/dummy_data.dart';
 import 'package:flutter/material.dart';
-import 'package:aviato_finance/modules/data_add/data_add_view.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

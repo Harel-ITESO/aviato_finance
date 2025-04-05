@@ -1,6 +1,8 @@
 import 'package:aviato_finance/components/application_button.dart';
 import 'package:aviato_finance/modules/authentication/widgets/form_input.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:aviato_finance/modules/authentication/auth_service.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
@@ -12,8 +14,33 @@ class RegisterForm extends StatefulWidget {
 class _RegisterFormState extends State<RegisterForm> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController repeatPasswordController =
-      TextEditingController();
+  final TextEditingController repeatPasswordController = TextEditingController();
+  String errorMessage = "";
+
+  @override
+  void dispose(){
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  void register() async {
+    try {
+      await authService.value.createAccount(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      popPage();
+    } on FirebaseAuthException catch(e) {
+      errorMessage = e.message ?? "An error occurred";
+    
+  }
+  }
+  void popPage() {
+    Navigator.pop(context);
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +77,11 @@ class _RegisterFormState extends State<RegisterForm> {
               type: ButtonType.primary,
               isDark: true,
               onPressed: () {
-                Navigator.pop(context);
+                if (passwordController.text == repeatPasswordController.text) {
+                  register();
+                } else {
+                  print("Passwords do not match");
+                }
               },
               child: Text("Sign up"),
             ),

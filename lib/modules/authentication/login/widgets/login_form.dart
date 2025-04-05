@@ -1,7 +1,10 @@
 import 'package:aviato_finance/components/application_button.dart';
 import 'package:aviato_finance/modules/authentication/login/widgets/other_options.dart';
 import 'package:aviato_finance/modules/authentication/widgets/form_input.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:aviato_finance/modules/authentication/auth_service.dart';
+
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -13,6 +16,49 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  String errorMessage = "";
+  final _auth = AuthService();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  void signIn() async {
+  try {
+    await _auth.signIn(
+      email: emailController.text,
+      password: passwordController.text,
+    );
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      Navigator.pushNamed(context, "/home");
+    }
+  } on FirebaseAuthException catch (e) {
+    setState(() {
+      errorMessage = e.message ?? "An error occurred";
+    });
+  }
+}
+
+  void signInWithGoogle() async {
+    try {
+      UserCredential userCredential = await _auth.signInWithGoogle();
+      if (userCredential.user != null) {
+        Navigator.pushNamed(context, "/home");
+      }
+    } catch (e) {
+      setState(() {
+        errorMessage = "Google sign-in failed: ${e.toString()}";
+      });
+    }
+  }
+  void popPage() {
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,11 +85,14 @@ class _LoginFormState extends State<LoginForm> {
             child: ApplicationButton(
               type: ButtonType.primary,
               isDark: true,
-              onPressed: () {
-                Navigator.pushNamed(context, "/home");
-              },
+              onPressed: signIn,
               child: Text("Log In"),
             ),
+          ),
+          SizedBox(height: 20),
+          Text (
+            errorMessage,
+            style: TextStyle(color: Colors.red),
           ),
           SizedBox(height: 20),
           OtherOptionsSection(),
@@ -71,7 +120,9 @@ class _LoginFormState extends State<LoginForm> {
 
           ApplicationButton(
             type: ButtonType.contrast,
-            onPressed: () {},
+            onPressed: () {
+              signInWithGoogle(); 
+            },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

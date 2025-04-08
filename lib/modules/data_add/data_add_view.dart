@@ -1,3 +1,4 @@
+import 'package:aviato_finance/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:flutter/services.dart';
@@ -12,8 +13,6 @@ class AddData extends StatefulWidget {
 class _AddDataState extends State<AddData> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
-  final Color customRed = Color.fromRGBO(160, 74, 67, 1);
-  final Color customGreen = Color.fromARGB(255, 161, 195, 105);
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
   final TextEditingController _paymentMethodController =
@@ -88,260 +87,177 @@ class _AddDataState extends State<AddData> {
     }
   }
 */
-  int _selectedIndex = 1;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    switch (index) {
-      case 0:
-        Navigator.pushNamed(context, '/home');
-        break;
-      case 1:
-        Navigator.pushNamed(context, '/addData');
-        break;
-      case 2:
-        Navigator.pushNamed(context, '/stats');
-        break;
-      default:
-      // Handle any other cases if necessary
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true, // Centrar el texto de la AppBar
-        title: const Text("Add Data"),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Card(
-          elevation: 4,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(15),
-            child: Column(
-              children: [
-                ToggleButtons(
-                  isSelected: [_isIncome, !_isIncome],
-                  onPressed: (index) {
-                    _onToggleChanged(index == 0);
-                  },
-                  borderRadius: BorderRadius.circular(8),
-                  selectedColor: Colors.white,
-                  fillColor: _isIncome ? customGreen : customGreen,
-                  children: const [
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Text("Income"),
+    return Padding(
+      padding: const EdgeInsets.all(15),
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            children: [
+              ToggleButtons(
+                isSelected: [_isIncome, !_isIncome],
+                onPressed: (index) {
+                  _onToggleChanged(index == 0);
+                },
+                borderRadius: BorderRadius.circular(8),
+                selectedColor: Colors.white,
+                fillColor: _isIncome ? customGreen : customGreen,
+                children: const [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Text("Income"),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Text("Outcome"),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              _buildTextField(
+                controller: _nameController,
+                label: "Title",
+                icon: Icons.edit,
+              ),
+              const SizedBox(height: 10),
+              _buildTextField(
+                controller: _dateController,
+                label: "Date",
+                icon: Icons.calendar_today,
+                readOnly: true,
+                onTap: _selectedDate,
+              ),
+              const SizedBox(height: 10),
+              _buildTextField(
+                controller: _amountController,
+                label: "Amount",
+                icon: Icons.attach_money,
+                keyboardType: TextInputType.number, // Solo datos numéricos
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                ],
+              ),
+              const SizedBox(height: 10),
+              _buildDropdown(
+                controller: _categoryController,
+                label: "Category",
+                icon: Icons.list,
+                items: _categories, // Use dynamic categories
+                onAddNew: _showAddCategoryDialog,
+              ),
+              const SizedBox(height: 10),
+              _buildDropdown(
+                controller: _paymentMethodController,
+                label: "Payment Method",
+                icon: Icons.payment,
+                items: _paymentMethods,
+              ),
+              const SizedBox(height: 10),
+              _buildDropdown(
+                controller: _repeatController,
+                label: "Repeat",
+                icon: Icons.repeat,
+                items: _repeatOptions,
+                onAddNew: _showCustomRepeatDialog,
+              ),
+              const SizedBox(height: 10),
+              _buildTextField(
+                controller: _descriptionController,
+                label: "Description",
+                icon: Icons.description,
+              ),
+              const SizedBox(height: 60),
+              // Botones de acción
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      minimumSize: Size(100, 60), // Ancho de 200 y alto de 60
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Text("Outcome"),
+                    onPressed: () {
+                      if (_nameController.text.isNotEmpty &&
+                          _amountController.text.isNotEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Continue adding data')),
+                        );
+                        _nameController.clear();
+                        _amountController.clear();
+                        _dateController.clear();
+                        _categoryController.clear();
+                        _paymentMethodController.clear();
+                        _repeatController.clear();
+                        _descriptionController.clear();
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Please fill in all required fields'),
+                          ),
+                        );
+                      }
+                    },
+                    child: const Text(
+                      "Next",
+                      style: TextStyle(color: Colors.white),
                     ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                _buildTextField(
-                  controller: _nameController,
-                  label: "Title",
-                  icon: Icons.edit,
-                ),
-                const SizedBox(height: 10),
-                _buildTextField(
-                  controller: _dateController,
-                  label: "Date",
-                  icon: Icons.calendar_today,
-                  readOnly: true,
-                  onTap: _selectedDate,
-                ),
-                const SizedBox(height: 10),
-                _buildTextField(
-                  controller: _amountController,
-                  label: "Amount",
-                  icon: Icons.attach_money,
-                  keyboardType: TextInputType.number, // Solo datos numéricos
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                _buildDropdown(
-                  controller: _categoryController,
-                  label: "Category",
-                  icon: Icons.list,
-                  items: _categories, // Use dynamic categories
-                  onAddNew: _showAddCategoryDialog,
-                ),
-                const SizedBox(height: 10),
-                _buildDropdown(
-                  controller: _paymentMethodController,
-                  label: "Payment Method",
-                  icon: Icons.payment,
-                  items: _paymentMethods,
-                ),
-                const SizedBox(height: 10),
-                _buildDropdown(
-                  controller: _repeatController,
-                  label: "Repeat",
-                  icon: Icons.repeat,
-                  items: _repeatOptions,
-                  onAddNew: _showCustomRepeatDialog,
-                ),
-                const SizedBox(height: 10),
-                _buildTextField(
-                  controller: _descriptionController,
-                  label: "Description",
-                  icon: Icons.description,
-                ),
-                const SizedBox(height: 60),
-                // Botones de acción
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(
+                            0.2,
+                          ), // Color y opacidad de la sombra
+                          spreadRadius: 2, // Difuminado hacia afuera
+                          blurRadius: 8, // Suavizado de la sombra
+                          offset: const Offset(
+                            4,
+                            4,
+                          ), // Desplazamiento de la sombra
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        minimumSize: Size(100, 60), // Ancho de 200 y alto de 60
+                        backgroundColor: customGreen,
+                        minimumSize: const Size(
+                          200,
+                          60,
+                        ), // Ancho de 200 y alto de 60
                       ),
                       onPressed: () {
-                        if (_nameController.text.isNotEmpty &&
-                            _amountController.text.isNotEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Continue adding data')),
-                          );
-                          _nameController.clear();
-                          _amountController.clear();
-                          _dateController.clear();
-                          _categoryController.clear();
-                          _paymentMethodController.clear();
-                          _repeatController.clear();
-                          _descriptionController.clear();
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'Please fill in all required fields',
-                              ),
-                            ),
-                          );
-                        }
+                        _nameController.clear();
+                        _amountController.clear();
+                        _dateController.clear();
+                        _categoryController.clear();
+                        _paymentMethodController.clear();
+                        _repeatController.clear();
+                        _descriptionController.clear();
                       },
                       child: const Text(
-                        "Next",
+                        "Save",
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(
-                              0.2,
-                            ), // Color y opacidad de la sombra
-                            spreadRadius: 2, // Difuminado hacia afuera
-                            blurRadius: 8, // Suavizado de la sombra
-                            offset: const Offset(
-                              4,
-                              4,
-                            ), // Desplazamiento de la sombra
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          backgroundColor: customGreen,
-                          minimumSize: const Size(
-                            200,
-                            60,
-                          ), // Ancho de 200 y alto de 60
-                        ),
-                        onPressed: () {
-                          _nameController.clear();
-                          _amountController.clear();
-                          _dateController.clear();
-                          _categoryController.clear();
-                          _paymentMethodController.clear();
-                          _repeatController.clear();
-                          _descriptionController.clear();
-                          Navigator.pop(context);
-                        },
-                        child: const Text(
-                          "Save",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.grey, // Texto siempre gris
-        unselectedItemColor: Colors.grey, // Texto no seleccionado también gris
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Container(
-              alignment:
-                  Alignment.center, // Centrar el ícono dentro del rectángulo
-              child: const Icon(
-                Icons.home_filled,
-                color: Color.fromARGB(255, 85, 91, 89),
-              ), // Ícono blanco
-            ),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Container(
-              width: 60, // Ancho del rectángulo
-              height: 40, // Altura del rectángulo
-              decoration: BoxDecoration(
-                color:
-                    _selectedIndex == 1
-                        ? customGreen
-                        : Colors
-                            .transparent, // Fondo relleno si está seleccionado
-                borderRadius: BorderRadius.circular(12), // Bordes redondeados
-              ),
-              alignment:
-                  Alignment.center, // Centrar el ícono dentro del rectángulo
-              child: const Icon(
-                Icons.add_circle_outline,
-                color: Colors.white,
-              ), // Ícono blanco
-            ),
-            label: 'Add',
-          ),
-          BottomNavigationBarItem(
-            icon: Container(
-              alignment:
-                  Alignment.center, // Centrar el ícono dentro del rectángulo
-              child: const Icon(
-                Icons.bar_chart_rounded,
-                color: Color.fromARGB(255, 91, 76, 76),
-              ),
-            ),
-            label: 'Stats',
-          ),
-        ],
       ),
     );
   }

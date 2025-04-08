@@ -1,4 +1,5 @@
 import 'package:aviato_finance/home.dart';
+import 'package:aviato_finance/modules/app_layout.dart';
 import 'package:aviato_finance/modules/authentication/login/login_view.dart';
 import 'package:aviato_finance/modules/authentication/register/register_view.dart';
 import 'package:flutter/material.dart';
@@ -9,13 +10,9 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp
-  ]);
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -30,7 +27,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const LoginView(),
+      home: const AppLayout(),
       //Add the routes here and then go to home.dart to add the navigation
       routes: {
         '/addData': (context) => const AddData(),

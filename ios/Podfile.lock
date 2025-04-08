@@ -130,11 +130,11 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AppAuth: d4f13a8fe0baf391b2108511793e4b479691fb73
-  desktop_webview_auth: 4cf620136c3d79796496eef85e59508e3a1a003d
+  desktop_webview_auth: d645139460ef203d50bd0cdb33356785dd939cce
   Firebase: 1fe1c0a7d9aaea32efe01fbea5f0ebd8d70e53a2
-  firebase_auth: 34c515a8fa76a4ef678ac5ad5cfa3bb3120f5ab5
-  firebase_core: 2d4534e7b489907dcede540c835b48981d890943
-  firebase_dynamic_links: de53015750ee801a731f48a09e127b8a0b14c666
+  firebase_auth: e37065f3f80ff90580c13ad0e5a48e3bb8d2ad77
+  firebase_core: 432718558359a8c08762151b5f49bb0f093eb6e0
+  firebase_dynamic_links: f1ea6defe555a0e140f6a42cfc45b96ed8d5204d
   FirebaseAppCheckInterop: f23709c9ce92d810aa53ff4ce12ad3e666a3c7be
   FirebaseAuth: c4146bdfdc87329f9962babd24dae89373f49a32
   FirebaseAuthInterop: ac22ed402c2f4e3a8c63ebd3278af9a06073c1be
@@ -143,7 +143,7 @@ SPEC CHECKSUMS:
   FirebaseCoreInternal: ef4505d2afb1d0ebbc33162cb3795382904b5679
   FirebaseDynamicLinks: a76f75ddb0612301c34b3f598100449b41bc2669
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  google_sign_in_ios: 19297361f2c51d7d8ac0201b866ef1fa5d1f94a8
+  google_sign_in_ios: 4111e87aa5e24a4404f00ea13479f35e571969cc
   GoogleSignIn: d4281ab6cf21542b1cfaff85c191f230b399d2db
   GoogleUtilities: 26a3abef001b6533cf678d3eb38fd3f614b7872d
   GTMAppAuth: f69bd07d68cd3b766125f7e072c45d7340dea0de

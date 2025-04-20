@@ -1,3 +1,4 @@
+import 'package:aviato_finance/modules/stats/csv_exporter.dart';
 import 'package:aviato_finance/modules/stats/excel_exporter.dart';
 import 'package:aviato_finance/modules/stats/exporter.dart';
 import 'package:aviato_finance/modules/stats/exporter_enum.dart';
@@ -10,6 +11,8 @@ abstract class ExporterFactory {
         return PdfExporter();
       case SelectedExporter.excel:
         return ExcelExporter();
+      case SelectedExporter.csv:
+        return CsvExporter();
     }
   }
 }

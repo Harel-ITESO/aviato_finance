@@ -1,10 +1,9 @@
 import 'package:aviato_finance/modules/stats/exporter.dart';
 import 'package:aviato_finance/utils/file_path.dart';
-import 'package:pdf/widgets.dart' as pw;
 import 'package:intl/intl.dart';
 
-class PdfExporter implements Exporter {
-  String getTextStringFormatted(
+class CsvExporter implements Exporter {
+  String generateCsvContent(
     List<Map<String, dynamic>> income,
     List<Map<String, dynamic>> outcome,
   ) {
@@ -13,14 +12,13 @@ class PdfExporter implements Exporter {
       symbol: '\$',
       decimalDigits: 2,
     );
-    final dateFormatter = DateFormat('MMM dd, yyyy');
+    final dateFormatter = DateFormat('yyyy-MM-dd');
 
-    // Add report header
-    buffer.writeln('AVIATO FINANCE REPORT');
+    // Add header for the CSV file
     buffer.writeln(
-      'Generated on ${DateFormat('MMMM dd, yyyy').format(DateTime.now())}',
+      'AVIATO FINANCE REPORT,${DateFormat('yyyy-MM-dd').format(DateTime.now())}',
     );
-    buffer.writeln('----------------------------------------');
+    buffer.writeln('');
 
     // Calculate totals
     double totalIncome = income.fold(
@@ -34,17 +32,15 @@ class PdfExporter implements Exporter {
     double netBalance = totalIncome + totalOutcome;
 
     // Add summary section
-    buffer.writeln('\nSUMMARY');
-    buffer.writeln('----------------------------------------');
-    buffer.writeln('Total Income: ${currencyFormatter.format(totalIncome)}');
-    buffer.writeln(
-      'Total Expenses: ${currencyFormatter.format(-totalOutcome)}',
-    );
-    buffer.writeln('Net Balance: ${currencyFormatter.format(netBalance)}');
+    buffer.writeln('SUMMARY');
+    buffer.writeln('Total Income,${currencyFormatter.format(totalIncome)}');
+    buffer.writeln('Total Expenses,${currencyFormatter.format(-totalOutcome)}');
+    buffer.writeln('Net Balance,${currencyFormatter.format(netBalance)}');
+    buffer.writeln('');
 
     // Add income details section
-    buffer.writeln('\nINCOME DETAILS');
-    buffer.writeln('----------------------------------------');
+    buffer.writeln('INCOME DETAILS');
+    buffer.writeln('Date,Name,Amount,Percentage');
 
     if (income.isEmpty) {
       buffer.writeln('No income records found.');
@@ -62,18 +58,16 @@ class PdfExporter implements Exporter {
         double amount = entry['amount'] + 0.0;
         double percentage = totalIncome > 0 ? (amount / totalIncome) * 100 : 0;
 
-        buffer.writeln('$name ($date)');
-        buffer.writeln('  Amount: ${currencyFormatter.format(amount)}');
         buffer.writeln(
-          '  Percentage of Total Income: ${percentage.toStringAsFixed(2)}%',
+          '$date,$name,${currencyFormatter.format(amount)},${percentage.toStringAsFixed(2)}%',
         );
-        buffer.writeln('');
       }
     }
+    buffer.writeln('');
 
     // Add expense details section
-    buffer.writeln('\nEXPENSE DETAILS');
-    buffer.writeln('----------------------------------------');
+    buffer.writeln('EXPENSE DETAILS');
+    buffer.writeln('Date,Name,Amount,Percentage');
 
     if (outcome.isEmpty) {
       buffer.writeln('No expense records found.');
@@ -92,35 +86,13 @@ class PdfExporter implements Exporter {
         double percentage =
             totalOutcome != 0 ? (amount.abs() / totalOutcome) * 100 : 0;
 
-        buffer.writeln('$name ($date)');
-        buffer.writeln('  Amount: ${currencyFormatter.format(amount)}');
         buffer.writeln(
-          '  Percentage of Total Expenses: ${percentage.toStringAsFixed(2)}%',
+          '$date,$name,${currencyFormatter.format(amount)},${percentage.toStringAsFixed(2)}%',
         );
-        buffer.writeln('');
       }
     }
 
-    // Add footer
-    buffer.writeln('----------------------------------------');
-    buffer.writeln('End of Report');
-
     return buffer.toString();
-  }
-
-  Future<void> generatePdfAndStore(String text) async {
-    final pdf = pw.Document();
-    pdf.addPage(
-      pw.Page(
-        build: (pw.Context context) {
-          return pw.Center(child: pw.Text(text));
-        },
-      ),
-    );
-
-    final file = await getFilePath("generated-finance.pdf");
-    print(file.path);
-    await file.writeAsBytes(await pdf.save());
   }
 
   @override
@@ -128,7 +100,10 @@ class PdfExporter implements Exporter {
     List<Map<String, dynamic>> income,
     List<Map<String, dynamic>> outcome,
   ) async {
-    String formattedText = getTextStringFormatted(income, outcome);
-    await generatePdfAndStore(formattedText);
+    String csvContent = generateCsvContent(income, outcome);
+
+    final file = await getFilePath("aviato-finance-report.csv");
+    print("CSV file saved to: ${file.path}");
+    await file.writeAsString(csvContent);
   }
 }

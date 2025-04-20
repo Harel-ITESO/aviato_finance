@@ -1,1 +1,1 @@
-enum SelectedExporter { pdf, excel }
+enum SelectedExporter { pdf, excel, csv }

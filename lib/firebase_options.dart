@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -54,6 +51,7 @@ class DefaultFirebaseOptions {
     appId: '1:681288317522:android:6459b06a5b63b31dc07d8b',
     messagingSenderId: '681288317522',
     projectId: 'aviato-finance',
+    databaseURL: 'https://aviato-finance-default-rtdb.firebaseio.com',
     storageBucket: 'aviato-finance.firebasestorage.app',
   );
 
@@ -62,7 +60,22 @@ class DefaultFirebaseOptions {
     appId: '1:681288317522:ios:3e617ddd316c1872c07d8b',
     messagingSenderId: '681288317522',
     projectId: 'aviato-finance',
+    databaseURL: 'https://aviato-finance-default-rtdb.firebaseio.com',
     storageBucket: 'aviato-finance.firebasestorage.app',
+    androidClientId: '681288317522-b9hc8mdn376pj9j3fj9kseal6n9no4p7.apps.googleusercontent.com',
+    iosClientId: '681288317522-henuf2foqmmepmuhphtjq4nolckk419i.apps.googleusercontent.com',
     iosBundleId: 'com.example.aviatoFinance',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyDECu03tzVXZ72Kx6lwlSJQaCven-0SjFg',
+    appId: '1:681288317522:web:7b45d8335bbe5f91c07d8b',
+    messagingSenderId: '681288317522',
+    projectId: 'aviato-finance',
+    authDomain: 'aviato-finance.firebaseapp.com',
+    databaseURL: 'https://aviato-finance-default-rtdb.firebaseio.com',
+    storageBucket: 'aviato-finance.firebasestorage.app',
+    measurementId: 'G-T335X230JG',
+  );
+
 }

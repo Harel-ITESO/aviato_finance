@@ -6,6 +6,8 @@
 	<string>681288317522-henuf2foqmmepmuhphtjq4nolckk419i.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
 	<string>com.googleusercontent.apps.681288317522-henuf2foqmmepmuhphtjq4nolckk419i</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>681288317522-b9hc8mdn376pj9j3fj9kseal6n9no4p7.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyAtCnKrsJlu7QawWo7miNSqpVzuH7XoH58</string>
 	<key>GCM_SENDER_ID</key>
@@ -30,5 +32,7 @@
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:681288317522:ios:3e617ddd316c1872c07d8b</string>
+	<key>DATABASE_URL</key>
+	<string>https://aviato-finance-default-rtdb.firebaseio.com</string>
 </dict>
 </plist>

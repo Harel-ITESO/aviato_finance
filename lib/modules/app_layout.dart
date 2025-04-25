@@ -1,3 +1,4 @@
+import 'package:aviato_finance/components/navigation/sidebar.dart';
 import 'package:aviato_finance/home.dart';
 import 'package:aviato_finance/modules/data_add/data_add_view.dart';
 import 'package:aviato_finance/modules/stats/stats_view.dart';
@@ -46,7 +47,7 @@ class _AppLayoutState extends State<AppLayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(backgroundColor: customGreen),
+      drawer: SideBar(),
       appBar: AppBar(
         title: Text(_pages[_currentPage].title),
         surfaceTintColor: Colors.transparent,
@@ -75,3 +76,4 @@ class _AppLayoutState extends State<AppLayout> {
     );
   }
 }
+

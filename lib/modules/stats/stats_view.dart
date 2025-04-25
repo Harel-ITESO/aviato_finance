@@ -161,12 +161,12 @@ class _StatsState extends State<Stats> {
           child: Container(
             height: 250,
             decoration: BoxDecoration(
-              color: const Color.fromARGB(
-                158,
+              color:  const Color.fromARGB(
+                20,
                 255,
                 255,
                 255,
-              ), // Fondo blanco para darle un aspecto plano
+              ),  // Fondo blanco para darle un aspecto plano
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
                 color: const Color.fromARGB(70, 114, 114, 114),

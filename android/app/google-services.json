@@ -1,15 +1,96 @@
 {
   "project_info": {
     "project_number": "681288317522",
+    "firebase_url": "https://aviato-finance-default-rtdb.firebaseio.com",
     "project_id": "aviato-finance",
     "storage_bucket": "aviato-finance.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:681288317522:android:9a777f483428294ec07d8b",
+        "android_client_info": {
+          "package_name": "com.example.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "681288317522-bvkra550mjvpnl85e0045rq81na9n0lk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA99HZ9SCs5XpxqHK034BWWIPew6aMWwUU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "681288317522-bvkra550mjvpnl85e0045rq81na9n0lk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "681288317522-henuf2foqmmepmuhphtjq4nolckk419i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.aviatoFinance"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:681288317522:android:6459b06a5b63b31dc07d8b",
         "android_client_info": {
           "package_name": "com.example.aviato_finance"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "681288317522-b9hc8mdn376pj9j3fj9kseal6n9no4p7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.aviato_finance",
+            "certificate_hash": "37343c0fe3f796062d40c3b05158e8f9dc13dc1a"
+          }
+        },
+        {
+          "client_id": "681288317522-bvkra550mjvpnl85e0045rq81na9n0lk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA99HZ9SCs5XpxqHK034BWWIPew6aMWwUU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "681288317522-bvkra550mjvpnl85e0045rq81na9n0lk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "681288317522-henuf2foqmmepmuhphtjq4nolckk419i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.aviatoFinance"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:681288317522:android:bdd1fb981a995ceec07d8b",
+        "android_client_info": {
+          "package_name": "com.example.firebasecore"
         }
       },
       "oauth_client": [

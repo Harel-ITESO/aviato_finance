@@ -26,7 +26,7 @@ class _IncomeOutcomeToggleState extends State<IncomeOutcomeToggle> {
       borderRadius: BorderRadius.circular(10),
       selectedColor: Colors.white,
       fillColor: Colors.green,
-      color: Colors.black,
+      color: Theme.of(context).colorScheme.onSurface,
       borderWidth: 2,
       children: [
         Padding(

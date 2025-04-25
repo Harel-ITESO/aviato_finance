@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:aviato_finance/components/graph_pie.dart';
 import 'package:aviato_finance/dummy_data.dart';
 import 'package:aviato_finance/utils/colors.dart';
@@ -65,12 +67,13 @@ class _HomePageState extends State<HomePage> {
       ChartData('Income', totalIncome, incomePercentage, customGreen),
       ChartData('Outcome', totalOutcome, outcomePercentage, customRed),
     ];
+    Color titleColor= Color.from(alpha:Theme.of(context).colorScheme.onSurface.a+70,red:Theme.of(context).colorScheme.onSurface.r*.9,green:Theme.of(context).colorScheme.onSurface.g*.9,blue:Theme.of(context).colorScheme.onSurface.b*.9); 
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Card(
-            color: Color.fromRGBO(236, 236, 236, 1),
+            color: Theme.of(context).colorScheme.onInverseSurface,//Color.fromRGBO(236, 236, 236, 1),
             child: SizedBox(
               height: 370,
               width: 350,
@@ -85,7 +88,7 @@ class _HomePageState extends State<HomePage> {
                           "Resume",
                           style: TextStyle(
                             fontSize: 20,
-                            color: Color.fromRGBO(108, 96, 100, 1),
+                            color: titleColor , //Color.fromRGBO(108, 96, 100, 1),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -93,7 +96,7 @@ class _HomePageState extends State<HomePage> {
                           "Last 7 days",
                           style: TextStyle(
                             fontSize: 20,
-                            color: Color.fromRGBO(108, 96, 100, 1),
+                            color: titleColor,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -113,7 +116,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Card(
-            color: Color.fromRGBO(236, 236, 236, 1),
+            color: Theme.of(context).colorScheme.onInverseSurface,//Color.fromRGBO(236, 236, 236, 1),
             child: SizedBox(
               height: 250,
               width: 350,
@@ -126,7 +129,7 @@ class _HomePageState extends State<HomePage> {
                       "History",
                       style: TextStyle(
                         fontSize: 20,
-                        color: Color.fromRGBO(108, 96, 100, 1),
+                        color: titleColor,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -134,16 +137,16 @@ class _HomePageState extends State<HomePage> {
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                          color: const Color.fromARGB(
-                            158,
+                          color:  Theme.of(context).colorScheme.onInverseSurface,/* const Color.fromARGB(
+                            20,
                             255,
                             255,
                             255,
-                          ), // Fondo blanco para darle un aspecto plano
+                          ), */  // Fondo blanco para darle un aspecto plano
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
                             color: const Color.fromARGB(70, 114, 114, 114),
-                            width: 1,
+                            width: .5,
                           ), // Borde suave para el efecto de incrustado
                           boxShadow: [
                             BoxShadow(

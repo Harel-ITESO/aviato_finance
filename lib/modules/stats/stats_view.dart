@@ -4,8 +4,10 @@ import 'package:aviato_finance/dummy_data.dart';
 import 'package:aviato_finance/modules/stats/export_options_dialog.dart';
 import 'package:aviato_finance/modules/stats/exporter_enum.dart';
 import 'package:aviato_finance/modules/stats/exporter_factory.dart';
+import 'package:aviato_finance/utils/Providers/data_provider.dart';
 import 'package:aviato_finance/utils/colors.dart' hide getUniqueColor;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class Stats extends StatefulWidget {
@@ -37,15 +39,19 @@ class _StatsState extends State<Stats> {
       ),
     );
   }
-
   List<ChartData> chartData = [];
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+    getData(context); 
+    });
 
+    getData(context);
     // Calcular datos solo una vez cuando se crea la página
     List<Map<String, dynamic>> listIncome =
-        InOutUserData.where((item) => item["amount"] >= 0).toList();
+        InOutUserData.value.where((item) => item["amount"] >= 0).toList();
     double totalIncome = listIncome.fold(
       0.0,
       (sum, item) => sum + (item["amount"] as num),
@@ -66,32 +72,26 @@ class _StatsState extends State<Stats> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    setState(() {
-      InOutUserData.sort(
-        (a, b) =>
-            DateTime.parse(b['date']).compareTo(DateTime.parse(a['date'])),
-      );
-    });
+Widget build(BuildContext context) {
+  final provider = Provider.of<InOutDataProvider>(context);
+  final listIncome = provider.income;
+  final listOutcome = provider.outcome;
+  final totalIncome = provider.totalIncome;
+  final totalOutcome = provider.totalOutcome;
 
-    // Filtrar listas
-    List<Map<String, dynamic>> listIncome =
-        InOutUserData.where((item) => item["amount"] >= 0).toList();
-
-    List<Map<String, dynamic>> listOutcome =
-        InOutUserData.where((item) => item["amount"] < 0).toList();
-
-    // Calcular totales
-    double totalIncome = listIncome.fold(
-      0.0,
-      (sum, item) => sum + (item["amount"] as num),
-    );
-
-    double totalOutcome =
-        listOutcome
-            .fold(0.0, (sum, item) => sum + (item["amount"] as num))
-            .abs();
-
+  // Este chartData se actualiza automáticamente cuando cambia el provider
+  chartData = [
+    ...listIncome.map(
+      (element) => ChartData(
+        element["name"],
+        element["amount"].toDouble(),
+        element["amount"] > 0
+            ? (element["amount"] / totalIncome) * 100
+            : 0,
+        getUniqueColor(),
+      ),
+    ),
+  ];
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [

@@ -4,6 +4,7 @@ import 'package:aviato_finance/modules/authentication/login/login_view.dart';
 import 'package:aviato_finance/modules/authentication/register/register_view.dart';
 import 'package:aviato_finance/modules/authentication/widgets/auth_gate.dart';
 import 'package:aviato_finance/utils/Providers/dark_mode_provider.dart';
+import 'package:aviato_finance/utils/Providers/data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:aviato_finance/modules/data_add/data_add_view.dart';
 import 'package:flutter/services.dart';
@@ -17,10 +18,15 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => DarkModeProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => InOutDataProvider()),
+        ChangeNotifierProvider(
+          create: (context) => DarkModeProvider(),
+        ),
+      ],
       child: const AviatoFinanceApp(),
-    ),
+    )
   );
 }
 

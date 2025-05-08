@@ -16,6 +16,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   Widget createItemList(context, index, List<Map<String, dynamic>> data) {
     final item = data[index];
     return Padding(
@@ -42,39 +43,11 @@ class _HomePageState extends State<HomePage> {
       getData(context);
       return Consumer<InOutDataProvider>(
         builder: (context, provider, child) {
-        DateTime now = DateTime.now();
-        DateTime sevenDaysAgo = now.subtract(Duration(days: 7));
 
         final sortedData = [...provider.data];
         sortedData.sort((a, b) => DateTime.parse(b['date']).compareTo(DateTime.parse(a['date'])));
+        final chartData =  [...provider.chartData_IncomeOutcome];
 
-        List recentData =
-            InOutUserData.value.where((item) {
-              DateTime itemDate = DateTime.parse(item["date"]);
-              return itemDate.isAfter(sevenDaysAgo) && itemDate.isBefore(now);
-            }).toList();
-
-        double totalIncome = recentData
-            .where((item) => item["amount"] >= 0)
-            .fold(0.0, (sum, item) => sum + item["amount"]);
-
-        double totalOutcome =
-            recentData
-                .where((item) => item["amount"] < 0)
-                .fold(0.0, (sum, item) => sum + item["amount"])
-                .abs();
-
-        double totalAmount = totalIncome + totalOutcome;
-
-        double incomePercentage =
-            totalAmount > 0 ? (totalIncome / totalAmount) * 100 : 100;
-        double outcomePercentage =
-            totalAmount > 0 ? (totalOutcome / totalAmount) * 100 : 0;
-
-        final List<ChartData> chartData = [
-          ChartData('Income', totalIncome, incomePercentage, customGreen),
-          ChartData('Outcome', totalOutcome, outcomePercentage, customRed),
-        ];
         Color titleColor= Color.from(alpha:Theme.of(context).colorScheme.onSurface.a+70,red:Theme.of(context).colorScheme.onSurface.r*.9,green:Theme.of(context).colorScheme.onSurface.g*.9,blue:Theme.of(context).colorScheme.onSurface.b*.9); 
         return Center(
           child: Column(

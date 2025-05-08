@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:aviato_finance/modules/authentication/auth_service.dart';
 import 'package:aviato_finance/utils/Providers/data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -60,18 +61,21 @@ List<Map<String, dynamic>> InOutUserData2=[
 ValueNotifier<List<Map<String, dynamic>>> InOutUserData = ValueNotifier([{
       "name": "_",
       "amount": 0,
-      "date": "2025-03-01",
-      "tags": ["job"]
+      "date": "2000-01-01",
+      "tags": ["_"]
     }]);
 
-  
+  AuthService authS = AuthService();
 Future<void> getData(BuildContext context) async {
+  var userEmail = authS.currentUser?.email;
   CollectionReference data = FirebaseFirestore.instance.collection('InOutUserData');
   await data.get().then((snapshot) {
     final List<Map<String, dynamic>> allData = [];
     for (var doc in snapshot.docs) {
-      Map<String, dynamic> decoded = doc.data() as Map<String, dynamic>;
-      allData.addAll(List<Map<String, dynamic>>.from(decoded['Data']));
+      if (userEmail == doc.id){
+        Map<String, dynamic> decoded = doc.data() as Map<String, dynamic>;
+        allData.addAll(List<Map<String, dynamic>>.from(decoded['Data']));
+      }
     }
     Provider.of<InOutDataProvider>(context, listen: false).setData(allData);
   }).catchError((error) {
@@ -110,6 +114,9 @@ Future<void> addData(String userDocId, Map<String, dynamic> newItem) async {
     DocumentSnapshot doc = await collection.doc(userDocId).get();
     if (doc.exists) {
       List<dynamic> currentData = (doc.data() as Map<String, dynamic>)['Data'];
+      if (currentData == Null) {
+        currentData=[];
+      }
       currentData.add(newItem);
 
       await collection.doc(userDocId).update({'Data': currentData});
@@ -129,6 +136,7 @@ Future<void> addData(String userDocId, Map<String, dynamic> newItem) async {
 
 
 /* 
+
 Future<void> deleteData(String user) {
   CollectionReference InOutUserData = FirebaseFirestore.instance.collection('InOutUserData');
   

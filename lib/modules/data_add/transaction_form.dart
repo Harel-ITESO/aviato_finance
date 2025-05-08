@@ -62,12 +62,12 @@ class _TransactionFormState extends State<TransactionForm> {
       isIncome: _isIncome,
     );
     
-  AuthService authS = AuthService();
+   AuthService authS = AuthService();
   var userEmail = authS.currentUser?.email;
   if (userEmail != Null){
     await addData(userEmail!, transaction.toJson());
   }
-
+ 
     print(transaction.toJson()); // Simulación de guardado
 
     Navigator.pop(context);

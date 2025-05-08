@@ -71,6 +71,7 @@ class _StatsState extends State<Stats> {
     ];
   }
 
+  var _isSelectedIncome= true;
   @override
 Widget build(BuildContext context) {
   final provider = Provider.of<InOutDataProvider>(context);
@@ -79,19 +80,33 @@ Widget build(BuildContext context) {
   final totalIncome = provider.totalIncome;
   final totalOutcome = provider.totalOutcome;
 
-  // Este chartData se actualiza automáticamente cuando cambia el provider
-  chartData = [
-    ...listIncome.map(
-      (element) => ChartData(
-        element["name"],
-        element["amount"].toDouble(),
-        element["amount"] > 0
-            ? (element["amount"] / totalIncome) * 100
-            : 0,
-        getUniqueColor(),
+  if (_isSelectedIncome){
+    chartData = [
+      ...listIncome.map(
+        (element) => ChartData(
+          element["name"],
+          element["amount"].toDouble(),
+          element["amount"] > 0
+              ? (element["amount"] / totalIncome) * 100
+              : 0,
+          getUniqueColor(),
+        ),
       ),
-    ),
-  ];
+    ];
+  }else{
+    chartData = [
+      ...listOutcome.map(
+          (element) => ChartData(
+            element["name"],
+            element["amount"].toDouble(),
+            element["amount"] != 0
+                ? ((element["amount"] / totalOutcome) * 100).abs()
+                : 0,
+            getUniqueColor(),
+          ),
+        ),
+      ];
+  }
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -102,34 +117,12 @@ Widget build(BuildContext context) {
             IncomeOutcomeToggle(
               onIncomeSelected: () {
                 setState(() {
-                  chartData = [
-                    ...listIncome.map(
-                      (element) => ChartData(
-                        element["name"],
-                        element["amount"].toDouble(),
-                        element["amount"] > 0
-                            ? (element["amount"] / totalIncome) * 100
-                            : 0,
-                        getUniqueColor(),
-                      ),
-                    ),
-                  ];
+                  _isSelectedIncome=true;
                 });
               },
               onOutcomeSelected: () {
                 setState(() {
-                  chartData = [
-                    ...listOutcome.map(
-                      (element) => ChartData(
-                        element["name"],
-                        element["amount"].toDouble(),
-                        element["amount"] != 0
-                            ? ((element["amount"] / totalOutcome) * 100).abs()
-                            : 0,
-                        getUniqueColor(),
-                      ),
-                    ),
-                  ];
+                  _isSelectedIncome=false;
                 });
               },
             ),

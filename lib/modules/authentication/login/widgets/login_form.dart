@@ -133,20 +133,7 @@ class _LoginFormState extends State<LoginForm> {
           ),
 
           SizedBox(height: 10),
-          ApplicationButton(
-            type: ButtonType.contrast,
-            onPressed: () {},
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.network(
-                  width: 50,
-                  "https://cdn3.iconfinder.com/data/icons/picons-social/57/16-apple-512.png",
-                ),
-                Text("Sign in with Apple"),
-              ],
-            ),
-          ),
+         
         ],
       ),
     );

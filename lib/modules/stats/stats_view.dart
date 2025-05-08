@@ -1,14 +1,15 @@
 import 'package:aviato_finance/components/graph_pie.dart';
 import 'package:aviato_finance/components/income_outcome_toggle.dart';
-import 'package:aviato_finance/dummy_data.dart';
 import 'package:aviato_finance/modules/stats/export_options_dialog.dart';
 import 'package:aviato_finance/modules/stats/exporter_enum.dart';
 import 'package:aviato_finance/modules/stats/exporter_factory.dart';
 import 'package:aviato_finance/utils/Providers/data_provider.dart';
 import 'package:aviato_finance/utils/colors.dart' hide getUniqueColor;
+import 'package:aviato_finance/modules/authentication/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Stats extends StatefulWidget {
   const Stats({super.key});
@@ -18,84 +19,206 @@ class Stats extends StatefulWidget {
 }
 
 class _StatsState extends State<Stats> {
-  Widget createItemList(context, index, data) {
-    ChartData item = data[index];
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(15, 4, 15, 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Icon(Icons.pie_chart, color: item.color),
-          Text(item.x, style: TextStyle(fontSize: 16)),
-          Text(
-            "\$${item.y}",
-            style: TextStyle(
-              fontSize: 16,
-              color: item.y < 0 ? customRed : customGreen,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
   List<ChartData> chartData = [];
+  var _isSelectedIncome = true;
+  final AuthService authS = AuthService();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-    getData(context); 
+      getData(context);
     });
-
-    getData(context);
-    // Calcular datos solo una vez cuando se crea la página
-    List<Map<String, dynamic>> listIncome =
-        InOutUserData.value.where((item) => item["amount"] >= 0).toList();
-    double totalIncome = listIncome.fold(
-      0.0,
-      (sum, item) => sum + (item["amount"] as num),
-    );
-
-    chartData = [
-      ...listIncome.map(
-        (element) => ChartData(
-          element["name"],
-          element["amount"].toDouble(),
-          element["amount"] != 0
-              ? ((element["amount"] / totalIncome) * 100).abs()
-              : 0,
-          getUniqueColor(),
-        ),
-      ),
-    ];
   }
 
-  var _isSelectedIncome= true;
-  @override
-Widget build(BuildContext context) {
-  final provider = Provider.of<InOutDataProvider>(context);
-  final listIncome = provider.income;
-  final listOutcome = provider.outcome;
-  final totalIncome = provider.totalIncome;
-  final totalOutcome = provider.totalOutcome;
+  Future<void> getData(BuildContext context) async {
+    var userEmail = authS.currentUser?.email;
+    CollectionReference data =
+        FirebaseFirestore.instance.collection('InOutUserData');
 
-  if (_isSelectedIncome){
-    chartData = [
-      ...listIncome.map(
-        (element) => ChartData(
-          element["name"],
-          element["amount"].toDouble(),
-          element["amount"] > 0
-              ? (element["amount"] / totalIncome) * 100
-              : 0,
-          getUniqueColor(),
+    try {
+      final snapshot = await data.get();
+      final List<Map<String, dynamic>> allData = [];
+
+      for (var doc in snapshot.docs) {
+        if (userEmail == doc.id) {
+          Map<String, dynamic> decoded = doc.data() as Map<String, dynamic>;
+          allData.addAll(List<Map<String, dynamic>>.from(decoded['Data']));
+        }
+      }
+
+      Provider.of<InOutDataProvider>(context, listen: false).setData(allData);
+    } catch (error) {
+      print("Error fetching: $error");
+    }
+  }
+
+  Future<void> updateData(String userDocId, int indexToUpdate, String newName, double newAmount) async {
+    CollectionReference collection = FirebaseFirestore.instance.collection('InOutUserData');
+
+    try {
+      DocumentSnapshot doc = await collection.doc(userDocId).get();
+      if (doc.exists) {
+        List<dynamic> dataList = (doc.data() as Map<String, dynamic>)['Data'];
+        if (indexToUpdate < dataList.length) {
+          dataList[indexToUpdate]['name'] = newName;
+          dataList[indexToUpdate]['amount'] = newAmount;
+
+          await collection.doc(userDocId).update({'Data': dataList});
+          print("Item updated successfully!");
+        }
+      }
+    } catch (e) {
+      print("Failed to update data: $e");
+    }
+  }
+
+  Future<void> deleteData(String userDocId, int indexToDelete) async {
+    CollectionReference collection = FirebaseFirestore.instance.collection('InOutUserData');
+
+    try {
+      DocumentSnapshot doc = await collection.doc(userDocId).get();
+      if (doc.exists) {
+        List<dynamic> currentData = (doc.data() as Map<String, dynamic>)['Data'];
+        currentData.removeAt(indexToDelete);
+
+        await collection.doc(userDocId).update({'Data': currentData});
+        print("Item deleted successfully!");
+      }
+    } catch (e) {
+      print("Failed to delete data: $e");
+    }
+  }
+
+  Widget createItemList(
+    BuildContext context,
+    int index,
+    List<ChartData> data,
+    List<Map<String, dynamic>> rawList,
+  ) {
+    ChartData item = data[index];
+
+    return Dismissible(
+      key: Key(item.x + index.toString()),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        color: Colors.red,
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: const Icon(Icons.delete, color: Colors.white),
+      ),
+      onDismissed: (_) async {
+        final userEmail = authS.currentUser?.email;
+        if (userEmail != null) {
+          await deleteData(userEmail, index);
+          await getData(context);
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${item.x} Deleted')),
+        );
+      },
+      child: InkWell(
+        onTap: () async {
+          final result = await showDialog<Map<String, dynamic>>(
+            context: context,
+            builder: (context) {
+              final nameController = TextEditingController(text: item.x);
+              final amountController =
+                  TextEditingController(text: item.y.toString());
+
+              return AlertDialog(
+                title: const Text('Edit item'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: nameController,
+                      decoration: const InputDecoration(labelText: 'Name'),
+                    ),
+                    TextField(
+                      controller: amountController,
+                      decoration: const InputDecoration(labelText: 'Amount'),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Exit'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context, {
+                        'name': nameController.text,
+                        'amount':
+                            double.tryParse(amountController.text) ?? 0.0,
+                      });
+                    },
+                    child: const Text('Save'),
+                  ),
+                ],
+              );
+            },
+          );
+
+          if (result != null) {
+            final userEmail = authS.currentUser?.email;
+            if (userEmail != null) {
+              await updateData(userEmail, index, result['name'], result['amount']);
+              await getData(context);
+            }
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(15, 4, 15, 4),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Icon(Icons.pie_chart, color: item.color),
+              Text(item.x, style: const TextStyle(fontSize: 16)),
+              Text(
+                "\$${item.y.toStringAsFixed(2)}",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: item.y < 0 ? customRed : customGreen,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    ];
-  }else{
-    chartData = [
-      ...listOutcome.map(
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final provider = Provider.of<InOutDataProvider>(context);
+    final listIncome = provider.income;
+    final listOutcome = provider.outcome;
+    final totalIncome = provider.totalIncome;
+    final totalOutcome = provider.totalOutcome;
+
+    List<Map<String, dynamic>> rawList =
+        _isSelectedIncome ? listIncome : listOutcome;
+
+    if (_isSelectedIncome) {
+      chartData = [
+        ...listIncome.map(
+          (element) => ChartData(
+            element["name"],
+            element["amount"].toDouble(),
+            element["amount"] > 0
+                ? (element["amount"] / totalIncome) * 100
+                : 0,
+            getUniqueColor(),
+          ),
+        ),
+      ];
+    } else {
+      chartData = [
+        ...listOutcome.map(
           (element) => ChartData(
             element["name"],
             element["amount"].toDouble(),
@@ -106,35 +229,34 @@ Widget build(BuildContext context) {
           ),
         ),
       ];
-  }
+    }
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            SizedBox(width: 50),
+            const SizedBox(width: 50),
             IncomeOutcomeToggle(
               onIncomeSelected: () {
                 setState(() {
-                  _isSelectedIncome=true;
+                  _isSelectedIncome = true;
                 });
               },
               onOutcomeSelected: () {
                 setState(() {
-                  _isSelectedIncome=false;
+                  _isSelectedIncome = false;
                 });
               },
             ),
             IconButton(
-              onPressed:
-                  () => showExportDialogOptions(context, (
-                    SelectedExporter e,
-                  ) async {
-                    var exporter = ExporterFactory.getExporter(e);
-                    await exporter.export(listIncome, listOutcome);
-                  }),
-              icon: Icon(Icons.save),
+              onPressed: () => showExportDialogOptions(context,
+                  (SelectedExporter e) async {
+                var exporter = ExporterFactory.getExporter(e);
+                await exporter.export(listIncome, listOutcome);
+              }),
+              icon: const Icon(Icons.save),
               color: customGreen,
               iconSize: 35,
             ),
@@ -154,32 +276,23 @@ Widget build(BuildContext context) {
           child: Container(
             height: 250,
             decoration: BoxDecoration(
-              color:  const Color.fromARGB(
-                20,
-                255,
-                255,
-                255,
-              ),  // Fondo blanco para darle un aspecto plano
+              color: const Color.fromARGB(20, 255, 255, 255),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
                 color: const Color.fromARGB(70, 114, 114, 114),
                 width: 1,
-              ), // Borde suave para el efecto de incrustado
-              boxShadow: [
-                BoxShadow(
-                  color:
-                      Colors
-                          .transparent, // Elimina la sombra para que no esté elevada
-                ),
+              ),
+              boxShadow: const [
+                BoxShadow(color: Colors.transparent),
               ],
             ),
             child: Scrollbar(
               child: ListView.builder(
                 shrinkWrap: true,
-                physics: AlwaysScrollableScrollPhysics(),
+                physics: const AlwaysScrollableScrollPhysics(),
                 itemCount: chartData.length,
                 itemBuilder: (context, index) {
-                  return createItemList(context, index, chartData);
+                  return createItemList(context, index, chartData, rawList);
                 },
               ),
             ),

@@ -187,11 +187,7 @@ class _AddDataState extends State<AddData> {
                       minimumSize: Size(100, 60), // Ancho de 200 y alto de 60
                     ),
                     onPressed: () {
-                      if (_nameController.text.isNotEmpty &&
-                          _amountController.text.isNotEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Continue adding data')),
-                        );
+                      
                         _nameController.clear();
                         _amountController.clear();
                         _dateController.clear();
@@ -199,16 +195,9 @@ class _AddDataState extends State<AddData> {
                         _paymentMethodController.clear();
                         _repeatController.clear();
                         _descriptionController.clear();
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Please fill in all required fields'),
-                          ),
-                        );
-                      }
-                    },
+                      },
                     child: const Text(
-                      "Next",
+                      "Clear",
                       style: TextStyle(color: Colors.white),
                     ),
                   ),

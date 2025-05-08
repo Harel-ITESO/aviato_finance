@@ -1,6 +1,9 @@
+import 'package:aviato_finance/dummy_data.dart';
+import 'package:aviato_finance/modules/authentication/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'custom_widgets.dart';
 import 'transaction_model.dart';
+
 
 class TransactionForm extends StatefulWidget {
   const TransactionForm({super.key});
@@ -40,7 +43,7 @@ class _TransactionFormState extends State<TransactionForm> {
     });
   }
 
-  void _saveTransaction() {
+  Future<void> _saveTransaction() async {
     if (_nameController.text.isEmpty || _amountController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please fill in all required fields")),
@@ -58,7 +61,13 @@ class _TransactionFormState extends State<TransactionForm> {
       description: _descriptionController.text,
       isIncome: _isIncome,
     );
-
+    
+   AuthService authS = AuthService();
+  var userEmail = authS.currentUser?.email;
+  if (userEmail != Null){
+    await addData(userEmail!, transaction.toJson());
+  }
+ 
     print(transaction.toJson()); // Simulación de guardado
 
     Navigator.pop(context);

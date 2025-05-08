@@ -12,7 +12,9 @@ class SideBar extends StatefulWidget {
   State<SideBar> createState() => _SideBarState();
 }
 
+  AuthService authS = AuthService();
 class _SideBarState extends State<SideBar> {
+  var userName = authS.currentUser?.email;
   @override
   Widget build(BuildContext context) {
     return Consumer<DarkModeProvider>(
@@ -31,6 +33,8 @@ class _SideBarState extends State<SideBar> {
                 child: Column(
                   children: [
                     SizedBox(height: 50),
+                        Text("User: "+userName!),
+                    SizedBox(height: 20),
                     Row(
                       children: [
                         Text("Dark mode"),

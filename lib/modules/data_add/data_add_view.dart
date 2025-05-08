@@ -1,3 +1,5 @@
+import 'package:aviato_finance/dummy_data.dart';
+import 'package:aviato_finance/modules/authentication/auth_service.dart';
 import 'package:aviato_finance/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
@@ -238,7 +240,18 @@ class _AddDataState extends State<AddData> {
                           60,
                         ), // Ancho de 200 y alto de 60
                       ),
-                      onPressed: () {
+                      onPressed: () async {
+                        AuthService authS = AuthService();
+                        var userEmail = authS.currentUser?.email;
+                        if (userEmail != Null){
+                          await addData(userEmail!, {
+                            "name": _nameController.text,
+                            "amount": _isIncome ? double.parse(_amountController.text): -double.parse(_amountController.text) ,
+                            "date": (_dateController.text).split(" ")[0],
+                            "tags": [_categoryController.text,_paymentMethodController.text,_repeatController.text],
+                            "description":_descriptionController.text
+                          });
+                        }
                         _nameController.clear();
                         _amountController.clear();
                         _dateController.clear();

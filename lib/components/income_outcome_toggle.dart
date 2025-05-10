@@ -35,7 +35,7 @@ class _IncomeOutcomeToggleState extends State<IncomeOutcomeToggle> {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text("Outcome"),
+          child: Text("Expenses"),
         ),
       ],
       onPressed: (int index) {

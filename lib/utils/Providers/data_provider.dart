@@ -25,6 +25,109 @@ class InOutDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+
+  List<ChartData> getOutcomeByTag(String selectedOption) {
+    final Map<String, double> tagTotals = {};
+    var opt=-1;
+    if (selectedOption == "Category"){
+        opt=0;
+    }else if (selectedOption == "Payment Method"){
+        opt=1;
+    }else if(selectedOption=="Repeat"){
+        opt=2;
+    }
+    if (opt==-1){
+      return [
+        ...outcome.map(
+          (element) => ChartData(
+            element["name"],
+            element["amount"].toDouble(),
+            element["amount"] != 0
+                ? ((element["amount"] / totalOutcome) * 100).abs()
+                : 0,
+            getUniqueColor(),
+          ),
+        ),
+      ];
+    }
+
+    for (var item in outcome) {
+      final double amount = item["amount"].toDouble().abs(); 
+      final List tags = [item["tags"][opt]];
+
+      for (var tag in tags) {
+        if (tag=="" || tag==" ")
+          tagTotals["Unregistered"] = (tagTotals[tag] ?? 0) + amount;
+        else 
+          tagTotals[tag] = (tagTotals[tag] ?? 0) + amount;
+      }
+    }
+    final double total = tagTotals.values.fold(0.0, (a, b) => a + b);
+
+    return tagTotals.entries.map((entry) {
+      final String tag = entry.key;
+      final double amount = - entry.value;
+      final double percentage = total > 0 ? (amount / total) * 100 : 0;
+      return ChartData(
+        tag,
+        amount,
+        percentage,
+        getUniqueColor(),
+      );
+    }).toList();
+  }
+
+
+  List<ChartData>  getIncomeByTag(String selectedOption) {
+  final Map<String, double> tagTotals = {};
+var opt=-1;
+    if (selectedOption == "Category"){
+        opt=0;
+    }else if (selectedOption == "Payment Method"){
+        opt=1;
+    }else if(selectedOption=="Repeat"){
+        opt=2;
+    }
+    if (opt==-1){
+      return [
+        ...income.map(
+          (element) => ChartData(
+            element["name"],
+            element["amount"].toDouble(),
+            element["amount"] != 0
+                ? ((element["amount"] / totalOutcome) * 100).abs()
+                : 0,
+            getUniqueColor(),
+          ),
+        ),
+      ];
+    }
+
+  for (var item in income) {
+    final double amount = item["amount"].toDouble(); 
+    final List tags = [item["tags"][opt]];
+
+    for (var tag in tags) {
+      if (tag=="")
+        tagTotals["Unregistered"] = (tagTotals[tag] ?? 0) + amount;
+      else 
+        tagTotals[tag] = (tagTotals[tag] ?? 0) + amount;
+    }
+  }
+  final double total = tagTotals.values.fold(0.0, (a, b) => a + b);
+
+  return tagTotals.entries.map((entry) {
+    final String tag = entry.key;
+    final double amount = entry.value;
+    final double percentage = total > 0 ? (amount / total) * 100 : 0;
+    return ChartData(
+      tag,
+      amount,
+      percentage,
+      getUniqueColor(),
+    );
+  }).toList();  }
+
   List<Map<String, dynamic>> get income =>
       _data.where((item) => item["amount"] >= 0).toList();
 
@@ -46,17 +149,7 @@ class InOutDataProvider extends ChangeNotifier {
               DateTime itemDate = DateTime.parse(item["date"]);
               return itemDate.isAfter(sevenDaysAgo) && itemDate.isBefore(now);
             }).toList();
-/* 
-    double get totalIncome => recentData
-            .where((item) => item["amount"] >= 0)
-            .fold(0.0, (sum, item) => sum + item["amount"]);
 
-    double get totalOutcome =>
-            recentData
-                .where((item) => item["amount"] < 0)
-                .fold(0.0, (sum, item) => sum + item["amount"])
-                .abs();
- */
     double get totalAmount => totalIncome + totalOutcome;
 
     double get incomePercentage =>
@@ -66,7 +159,7 @@ class InOutDataProvider extends ChangeNotifier {
 
     List<ChartData> get chartData_IncomeOutcome => [
           ChartData('Income', totalIncome, incomePercentage, customGreen),
-          ChartData('Outcome', totalOutcome, outcomePercentage, customRed),
+          ChartData('Expenses', totalOutcome, outcomePercentage, customRed),
         ];
 }
 

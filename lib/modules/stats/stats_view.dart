@@ -4,7 +4,7 @@ import 'package:aviato_finance/modules/stats/export_options_dialog.dart';
 import 'package:aviato_finance/modules/stats/exporter_enum.dart';
 import 'package:aviato_finance/modules/stats/exporter_factory.dart';
 import 'package:aviato_finance/utils/Providers/data_provider.dart';
-import 'package:aviato_finance/utils/colors.dart' hide getUniqueColor;
+import 'package:aviato_finance/utils/colors.dart';
 import 'package:aviato_finance/modules/authentication/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -119,6 +119,14 @@ class _StatsState extends State<Stats> {
       },
       child: InkWell(
         onTap: () async {
+          if (selectedOption!="None"){
+            ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("To edit, remove the filter."),
+                          )
+                        );
+            return;
+            }
           final result = await showDialog<Map<String, dynamic>>(
             context: context,
             builder: (context) {
@@ -191,6 +199,7 @@ class _StatsState extends State<Stats> {
       ),
     );
   }
+    String selectedOption = 'Category';
 
   @override
   Widget build(BuildContext context) {
@@ -200,35 +209,14 @@ class _StatsState extends State<Stats> {
     final totalIncome = provider.totalIncome;
     final totalOutcome = provider.totalOutcome;
 
+
     List<Map<String, dynamic>> rawList =
         _isSelectedIncome ? listIncome : listOutcome;
 
     if (_isSelectedIncome) {
-      chartData = [
-        ...listIncome.map(
-          (element) => ChartData(
-            element["name"],
-            element["amount"].toDouble(),
-            element["amount"] > 0
-                ? (element["amount"] / totalIncome) * 100
-                : 0,
-            getUniqueColor(),
-          ),
-        ),
-      ];
+      chartData = provider.getIncomeByTag(selectedOption);
     } else {
-      chartData = [
-        ...listOutcome.map(
-          (element) => ChartData(
-            element["name"],
-            element["amount"].toDouble(),
-            element["amount"] != 0
-                ? ((element["amount"] / totalOutcome) * 100).abs()
-                : 0,
-            getUniqueColor(),
-          ),
-        ),
-      ];
+      chartData = provider.getOutcomeByTag(selectedOption);
     }
 
     return Column(
@@ -261,6 +249,31 @@ class _StatsState extends State<Stats> {
               iconSize: 35,
             ),
           ],
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(50,0,8,0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              DropdownButton<String>(
+                value: selectedOption,
+                onChanged: (String? newValue) {
+                  if (newValue != null) {
+                    setState(() {
+                      selectedOption = newValue;
+                    });
+                  }
+                },
+                items: <String>['None','Category', 'Payment Method', 'Repeat']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
         ),
         SizedBox(
           height: 400,

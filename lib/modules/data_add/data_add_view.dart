@@ -116,7 +116,7 @@ class _AddDataState extends State<AddData> {
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text("Outcome"),
+                    child: Text("Expenses"),
                   ),
                 ],
               ),
@@ -238,9 +238,13 @@ class _AddDataState extends State<AddData> {
                             "amount": _isIncome ? double.parse(_amountController.text): -double.parse(_amountController.text) ,
                             "date": (_dateController.text).split(" ")[0],
                             "tags": [_categoryController.text,_paymentMethodController.text,_repeatController.text],
-                            "description":_descriptionController.text
                           });
                         }
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("item: "+ _nameController.text +" saved"),
+                          )
+                        );
                         _nameController.clear();
                         _amountController.clear();
                         _dateController.clear();

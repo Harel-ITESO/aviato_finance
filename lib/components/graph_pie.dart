@@ -10,7 +10,7 @@ class ChartData {
   final double percentage;
   final Color? color;
 }
-
+/* 
 Set<Color> usedColors = {}; // Para evitar repetidos
 Color getUniqueColor() {
   Color newColor;
@@ -24,7 +24,7 @@ Color getUniqueColor() {
   } while (usedColors.contains(newColor)); // Evita colores repetidos
   usedColors.add(newColor);
   return newColor;
-}
+} */
 
 class GraphPie extends StatelessWidget {
   const GraphPie({

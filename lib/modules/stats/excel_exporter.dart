@@ -45,15 +45,21 @@ class ExcelExporter implements Exporter {
     );
 
     // Summary Sheet
-    var cell = summarySheet.cell(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: 0));
+    var cell = summarySheet.cell(
+      CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: 0),
+    );
     cell.value = TextCellValue('AVIATO FINANCE REPORT');
     cell.cellStyle = headerStyle;
 
     summarySheet
         .cell(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: 1))
-        .value = TextCellValue('Generated on ${DateFormat('MMMM dd, yyyy').format(DateTime.now())}');
+        .value = TextCellValue(
+      'Generated on ${DateFormat('MMMM dd, yyyy').format(DateTime.now())}',
+    );
 
-    cell = summarySheet.cell(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: 3));
+    cell = summarySheet.cell(
+      CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: 3),
+    );
     cell.value = TextCellValue('SUMMARY');
     cell.cellStyle = subHeaderStyle;
 
@@ -79,19 +85,27 @@ class ExcelExporter implements Exporter {
         .value = TextCellValue(currencyFormatter.format(netBalance));
 
     // Income Sheet Headers
-    cell = incomeSheet.cell(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: 0));
+    cell = incomeSheet.cell(
+      CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: 0),
+    );
     cell.value = TextCellValue('Date');
     cell.cellStyle = headerStyle;
-    
-    cell = incomeSheet.cell(CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: 0));
+
+    cell = incomeSheet.cell(
+      CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: 0),
+    );
     cell.value = TextCellValue('Name');
     cell.cellStyle = headerStyle;
-    
-    cell = incomeSheet.cell(CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: 0));
+
+    cell = incomeSheet.cell(
+      CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: 0),
+    );
     cell.value = TextCellValue('Amount');
     cell.cellStyle = headerStyle;
-    
-    cell = incomeSheet.cell(CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: 0));
+
+    cell = incomeSheet.cell(
+      CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: 0),
+    );
     cell.value = TextCellValue('Percentage');
     cell.cellStyle = headerStyle;
 
@@ -131,19 +145,27 @@ class ExcelExporter implements Exporter {
     }
 
     // Expense Sheet Headers
-    cell = outcomeSheet.cell(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: 0));
+    cell = outcomeSheet.cell(
+      CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: 0),
+    );
     cell.value = TextCellValue('Date');
     cell.cellStyle = headerStyle;
-    
-    cell = outcomeSheet.cell(CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: 0));
+
+    cell = outcomeSheet.cell(
+      CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: 0),
+    );
     cell.value = TextCellValue('Name');
     cell.cellStyle = headerStyle;
-    
-    cell = outcomeSheet.cell(CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: 0));
+
+    cell = outcomeSheet.cell(
+      CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: 0),
+    );
     cell.value = TextCellValue('Amount');
     cell.cellStyle = headerStyle;
-    
-    cell = outcomeSheet.cell(CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: 0));
+
+    cell = outcomeSheet.cell(
+      CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: 0),
+    );
     cell.value = TextCellValue('Percentage');
     cell.cellStyle = headerStyle;
 
@@ -198,7 +220,7 @@ class ExcelExporter implements Exporter {
   }
 
   @override
-  Future<void> export(
+  Future<String> export(
     List<Map<String, dynamic>> income,
     List<Map<String, dynamic>> outcome,
   ) async {
@@ -207,5 +229,6 @@ class ExcelExporter implements Exporter {
     final file = await getFilePath("aviato-finance-report.xlsx");
     print("Excel file saved to: ${file.path}");
     await file.writeAsBytes(excel.encode()!);
+    return file.path;
   }
 }

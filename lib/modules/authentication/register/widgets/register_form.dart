@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:aviato_finance/components/application_button.dart';
 import 'package:aviato_finance/modules/authentication/widgets/form_input.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,11 +16,12 @@ class RegisterForm extends StatefulWidget {
 class _RegisterFormState extends State<RegisterForm> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController repeatPasswordController = TextEditingController();
+  final TextEditingController repeatPasswordController =
+      TextEditingController();
   String errorMessage = "";
 
   @override
-  void dispose(){
+  void dispose() {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
@@ -26,21 +29,28 @@ class _RegisterFormState extends State<RegisterForm> {
 
   void register() async {
     try {
-      await authService.value.createAccount(
+      // first register the user
+      var user = await authService.value.createAccount(
         email: emailController.text,
         password: passwordController.text,
       );
-      popPage();
-    } on FirebaseAuthException catch(e) {
+
+      var email = user.user?.email;
+
+      // login the user
+      await authService.value.signIn(
+        email: email!,
+        password: passwordController.text,
+      );
+      goToApp(context);
+    } on FirebaseAuthException catch (e) {
       errorMessage = e.message ?? "An error occurred";
-    
-  }
-  }
-  void popPage() {
-    Navigator.pop(context);
+    }
   }
 
-
+  void goToApp(BuildContext context) {
+    Navigator.of(context).pushNamed("/app");
+  }
 
   @override
   Widget build(BuildContext context) {

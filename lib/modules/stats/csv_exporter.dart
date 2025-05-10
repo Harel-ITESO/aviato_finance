@@ -96,7 +96,7 @@ class CsvExporter implements Exporter {
   }
 
   @override
-  Future<void> export(
+  Future<String> export(
     List<Map<String, dynamic>> income,
     List<Map<String, dynamic>> outcome,
   ) async {
@@ -105,5 +105,6 @@ class CsvExporter implements Exporter {
     final file = await getFilePath("aviato-finance-report.csv");
     print("CSV file saved to: ${file.path}");
     await file.writeAsString(csvContent);
+    return file.path;
   }
 }

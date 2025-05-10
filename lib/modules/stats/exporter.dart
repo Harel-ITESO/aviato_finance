@@ -1,5 +1,5 @@
 abstract class Exporter {
-  Future<void> export(
+  Future<String> export(
     List<Map<String, dynamic>> income,
     List<Map<String, dynamic>> outcome,
   );

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 Future<void> showExportDialogOptions(
   BuildContext context,
-  Future<void> Function(SelectedExporter) exportSetter,
+  Future<String> Function(SelectedExporter) exportSetter,
 ) {
   List<Widget> options =
       SelectedExporter.values.map((exporter) {
@@ -12,7 +12,7 @@ Future<void> showExportDialogOptions(
           onPressed: () async {
             try {
               Navigator.pop(context);
-              await exportSetter(exporter);
+              var onPath = await exportSetter(exporter);
               // ignore: use_build_context_synchronously
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -21,7 +21,7 @@ Future<void> showExportDialogOptions(
                   showCloseIcon: true,
                   closeIconColor: Colors.white,
                   content: Text(
-                    "${exporter.name.toUpperCase()} successfully exported",
+                    "${exporter.name.toUpperCase()} successfully exported on: $onPath",
                   ),
                 ),
               );

@@ -33,8 +33,9 @@ class _StatsState extends State<Stats> {
 
   Future<void> getData(BuildContext context) async {
     var userEmail = authS.currentUser?.email;
-    CollectionReference data =
-        FirebaseFirestore.instance.collection('InOutUserData');
+    CollectionReference data = FirebaseFirestore.instance.collection(
+      'InOutUserData',
+    );
 
     try {
       final snapshot = await data.get();
@@ -53,8 +54,15 @@ class _StatsState extends State<Stats> {
     }
   }
 
-  Future<void> updateData(String userDocId, int indexToUpdate, String newName, double newAmount) async {
-    CollectionReference collection = FirebaseFirestore.instance.collection('InOutUserData');
+  Future<void> updateData(
+    String userDocId,
+    int indexToUpdate,
+    String newName,
+    double newAmount,
+  ) async {
+    CollectionReference collection = FirebaseFirestore.instance.collection(
+      'InOutUserData',
+    );
 
     try {
       DocumentSnapshot doc = await collection.doc(userDocId).get();
@@ -74,12 +82,15 @@ class _StatsState extends State<Stats> {
   }
 
   Future<void> deleteData(String userDocId, int indexToDelete) async {
-    CollectionReference collection = FirebaseFirestore.instance.collection('InOutUserData');
+    CollectionReference collection = FirebaseFirestore.instance.collection(
+      'InOutUserData',
+    );
 
     try {
       DocumentSnapshot doc = await collection.doc(userDocId).get();
       if (doc.exists) {
-        List<dynamic> currentData = (doc.data() as Map<String, dynamic>)['Data'];
+        List<dynamic> currentData =
+            (doc.data() as Map<String, dynamic>)['Data'];
         currentData.removeAt(indexToDelete);
 
         await collection.doc(userDocId).update({'Data': currentData});
@@ -113,26 +124,25 @@ class _StatsState extends State<Stats> {
           await deleteData(userEmail, index);
           await getData(context);
         }
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${item.x} Deleted')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('${item.x} Deleted')));
       },
       child: InkWell(
         onTap: () async {
-          if (selectedOption!="None"){
+          if (selectedOption != "None") {
             ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text("To edit, remove the filter."),
-                          )
-                        );
+              SnackBar(content: Text("To edit, remove the filter.")),
+            );
             return;
-            }
+          }
           final result = await showDialog<Map<String, dynamic>>(
             context: context,
             builder: (context) {
               final nameController = TextEditingController(text: item.x);
-              final amountController =
-                  TextEditingController(text: item.y.toString());
+              final amountController = TextEditingController(
+                text: item.y.toString(),
+              );
 
               return AlertDialog(
                 title: const Text('Edit item'),
@@ -159,8 +169,7 @@ class _StatsState extends State<Stats> {
                     onPressed: () {
                       Navigator.pop(context, {
                         'name': nameController.text,
-                        'amount':
-                            double.tryParse(amountController.text) ?? 0.0,
+                        'amount': double.tryParse(amountController.text) ?? 0.0,
                       });
                     },
                     child: const Text('Save'),
@@ -173,7 +182,12 @@ class _StatsState extends State<Stats> {
           if (result != null) {
             final userEmail = authS.currentUser?.email;
             if (userEmail != null) {
-              await updateData(userEmail, index, result['name'], result['amount']);
+              await updateData(
+                userEmail,
+                index,
+                result['name'],
+                result['amount'],
+              );
               await getData(context);
             }
           }
@@ -199,7 +213,8 @@ class _StatsState extends State<Stats> {
       ),
     );
   }
-    String selectedOption = 'Category';
+
+  String selectedOption = 'Category';
 
   @override
   Widget build(BuildContext context) {
@@ -208,7 +223,6 @@ class _StatsState extends State<Stats> {
     final listOutcome = provider.outcome;
     final totalIncome = provider.totalIncome;
     final totalOutcome = provider.totalOutcome;
-
 
     List<Map<String, dynamic>> rawList =
         _isSelectedIncome ? listIncome : listOutcome;
@@ -239,11 +253,14 @@ class _StatsState extends State<Stats> {
               },
             ),
             IconButton(
-              onPressed: () => showExportDialogOptions(context,
-                  (SelectedExporter e) async {
-                var exporter = ExporterFactory.getExporter(e);
-                await exporter.export(listIncome, listOutcome);
-              }),
+              onPressed:
+                  () => showExportDialogOptions(context, (
+                    SelectedExporter e,
+                  ) async {
+                    var exporter = ExporterFactory.getExporter(e);
+                    var path = await exporter.export(listIncome, listOutcome);
+                    return path;
+                  }),
               icon: const Icon(Icons.save),
               color: customGreen,
               iconSize: 35,
@@ -251,7 +268,7 @@ class _StatsState extends State<Stats> {
           ],
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(50,0,8,0),
+          padding: const EdgeInsets.fromLTRB(50, 0, 8, 0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -264,13 +281,18 @@ class _StatsState extends State<Stats> {
                     });
                   }
                 },
-                items: <String>['None','Category', 'Payment Method', 'Repeat']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
+                items:
+                    <String>[
+                      'None',
+                      'Category',
+                      'Payment Method',
+                      'Repeat',
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
               ),
             ],
           ),
@@ -295,9 +317,7 @@ class _StatsState extends State<Stats> {
                 color: const Color.fromARGB(70, 114, 114, 114),
                 width: 1,
               ),
-              boxShadow: const [
-                BoxShadow(color: Colors.transparent),
-              ],
+              boxShadow: const [BoxShadow(color: Colors.transparent)],
             ),
             child: Scrollbar(
               child: ListView.builder(

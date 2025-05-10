@@ -108,7 +108,7 @@ class PdfExporter implements Exporter {
     return buffer.toString();
   }
 
-  Future<void> generatePdfAndStore(String text) async {
+  Future<String> generatePdfAndStore(String text) async {
     final pdf = pw.Document();
     pdf.addPage(
       pw.Page(
@@ -121,14 +121,16 @@ class PdfExporter implements Exporter {
     final file = await getFilePath("generated-finance.pdf");
     print(file.path);
     await file.writeAsBytes(await pdf.save());
+    return file.path;
   }
 
   @override
-  Future<void> export(
+  Future<String> export(
     List<Map<String, dynamic>> income,
     List<Map<String, dynamic>> outcome,
   ) async {
     String formattedText = getTextStringFormatted(income, outcome);
-    await generatePdfAndStore(formattedText);
+    var path = await generatePdfAndStore(formattedText);
+    return path;
   }
 }

@@ -16,7 +16,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   Widget createItemList(context, index, List<Map<String, dynamic>> data) {
     final item = data[index];
     return Padding(
@@ -39,22 +38,32 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-    Widget build(BuildContext context) {
-      getData(context);
-      return Consumer<InOutDataProvider>(
-        builder: (context, provider, child) {
-
+  Widget build(BuildContext context) {
+    getData(context);
+    return Consumer<InOutDataProvider>(
+      builder: (context, provider, child) {
         final sortedData = [...provider.data];
-        sortedData.sort((a, b) => DateTime.parse(b['date']).compareTo(DateTime.parse(a['date'])));
-        final chartData =  [...provider.chartData_IncomeOutcome];
+        sortedData.sort(
+          (a, b) =>
+              DateTime.parse(b['date']).compareTo(DateTime.parse(a['date'])),
+        );
+        final chartData = [...provider.chartData_IncomeOutcome];
 
-        Color titleColor= Color.from(alpha:Theme.of(context).colorScheme.onSurface.a+70,red:Theme.of(context).colorScheme.onSurface.r*.9,green:Theme.of(context).colorScheme.onSurface.g*.9,blue:Theme.of(context).colorScheme.onSurface.b*.9); 
+        Color titleColor = Color.from(
+          alpha: Theme.of(context).colorScheme.onSurface.a + 70,
+          red: Theme.of(context).colorScheme.onSurface.r * .9,
+          green: Theme.of(context).colorScheme.onSurface.g * .9,
+          blue: Theme.of(context).colorScheme.onSurface.b * .9,
+        );
         return Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Card(
-                color: Theme.of(context).colorScheme.onInverseSurface,//Color.fromRGBO(236, 236, 236, 1),
+                color:
+                    Theme.of(context)
+                        .colorScheme
+                        .onInverseSurface, //Color.fromRGBO(236, 236, 236, 1),
                 child: SizedBox(
                   height: 370,
                   width: 350,
@@ -69,7 +78,8 @@ class _HomePageState extends State<HomePage> {
                               "Resume",
                               style: TextStyle(
                                 fontSize: 20,
-                                color: titleColor , //Color.fromRGBO(108, 96, 100, 1),
+                                color:
+                                    titleColor, //Color.fromRGBO(108, 96, 100, 1),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -81,7 +91,6 @@ class _HomePageState extends State<HomePage> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(width: 70),
                           ],
                         ),
                         GraphPie(
@@ -97,7 +106,10 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Card(
-                color: Theme.of(context).colorScheme.onInverseSurface,//Color.fromRGBO(236, 236, 236, 1),
+                color:
+                    Theme.of(context)
+                        .colorScheme
+                        .onInverseSurface, //Color.fromRGBO(236, 236, 236, 1),
                 child: SizedBox(
                   height: 250,
                   width: 350,
@@ -118,12 +130,17 @@ class _HomePageState extends State<HomePage> {
                         Expanded(
                           child: Container(
                             decoration: BoxDecoration(
-                              color:  Theme.of(context).colorScheme.onInverseSurface,/* const Color.fromARGB(
+                              color:
+                                  Theme.of(
+                                    context,
+                                  ).colorScheme.onInverseSurface,
+                              /* const Color.fromARGB(
                                 20,
                                 255,
                                 255,
                                 255,
-                              ), */  // Fondo blanco para darle un aspecto plano
+                              ), */
+                              // Fondo blanco para darle un aspecto plano
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
                                 color: const Color.fromARGB(70, 114, 114, 114),
@@ -145,11 +162,38 @@ class _HomePageState extends State<HomePage> {
                                   physics: AlwaysScrollableScrollPhysics(),
                                   itemCount: sortedData.length,
                                   itemBuilder: (context, index) {
-                                    return createItemList(context, index, sortedData);
+                                    return createItemList(
+                                      context,
+                                      index,
+                                      sortedData,
+                                    );
                                   },
                                 ),
                               ),
                             ),
+                          ),
+                        ),
+                        SizedBox(height: 2),
+                        DefaultTextStyle(
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: titleColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Total:"),
+                              Text(
+                                "\$${provider.totalAmount.toString()}",
+                                style: TextStyle(
+                                  color:
+                                      provider.totalAmount < 0
+                                          ? customRed
+                                          : customGreen,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
